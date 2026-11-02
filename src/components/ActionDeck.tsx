@@ -27,6 +27,12 @@ const ASCII_BAR_FRAMES = [
   '[========= ]',
   '[==========]',
 ];
+const HUMAN_THINKING_DOTS = [
+  'Human is thinking',
+  'Human is thinking.',
+  'Human is thinking..',
+  'Human is thinking...',
+];
 
 export const ActionDeck: React.FC<ActionDeckProps> = ({
   choices,
@@ -40,10 +46,13 @@ export const ActionDeck: React.FC<ActionDeckProps> = ({
 }) => {
   const [spinnerIndex, setSpinnerIndex] = useState<number>(0);
   const [barIndex, setBarIndex] = useState<number>(0);
+  const [humanDotIndex, setHumanDotIndex] = useState<number>(0);
 
-  // Animate ASCII spinner and progress bar while waiting for next turn
+  const isResolvingChoice = phase === 'SLAM' || phase === 'RESOLVING';
+
+  // Animate ASCII spinner, progress bar, and Human Thinking text
   useEffect(() => {
-    if (phase !== 'WAITING_STREAM' && phase !== 'SLAM' && phase !== 'RESOLVING') {
+    if (phase !== 'WAITING_STREAM' && !isResolvingChoice) {
       return;
     }
 
@@ -55,11 +64,16 @@ export const ActionDeck: React.FC<ActionDeckProps> = ({
       setBarIndex((prev) => (prev + 1) % ASCII_BAR_FRAMES.length);
     }, 120);
 
+    const humanDotTimer = window.setInterval(() => {
+      setHumanDotIndex((prev) => (prev + 1) % HUMAN_THINKING_DOTS.length);
+    }, 280);
+
     return () => {
       window.clearInterval(spinnerTimer);
       window.clearInterval(barTimer);
+      window.clearInterval(humanDotTimer);
     };
-  }, [phase]);
+  }, [phase, isResolvingChoice]);
 
   // Global keyboard bindings [1-4], [A-D], [Enter/Space to Start]
   useEffect(() => {
@@ -157,8 +171,43 @@ export const ActionDeck: React.FC<ActionDeckProps> = ({
     );
   }
 
-  // WAITING FOR NEXT TURN STATE: Choice committed / Situation stream streaming
-  if (phase === 'WAITING_STREAM' || phase === 'SLAM' || phase === 'RESOLVING') {
+  // RESOLVING / DELAY JITTER STATE: Human is thinking...
+  if (isResolvingChoice) {
+    return (
+      <section
+        className="action-deck-section"
+        aria-label="Tactical deck awaiting human operator resolution"
+      >
+        <div className="action-deck-header">
+          <span className="deck-instruction">
+            Choice committed // Operator evaluating impact
+          </span>
+        </div>
+
+        <div className="waiting-turn-panel human-eval-panel" role="status" aria-live="polite">
+          <div className="waiting-spinner-row">
+            <span className="waiting-ascii-glyph" aria-hidden="true">
+              {ASCII_SPINNER_FRAMES[spinnerIndex]}
+            </span>
+            <span className="waiting-headline human-thinking-headline">
+              {HUMAN_THINKING_DOTS[humanDotIndex]}
+            </span>
+          </div>
+
+          <div className="waiting-ascii-progress" aria-hidden="true">
+            {ASCII_BAR_FRAMES[barIndex]}
+          </div>
+
+          <p className="waiting-subtext">
+            Simulating human operator code inspection and AST diff evaluation (4–8s deliberate jitter).
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  // WAITING FOR NEXT TURN STATE: Situation stream streaming
+  if (phase === 'WAITING_STREAM') {
     return (
       <section
         className="action-deck-section"

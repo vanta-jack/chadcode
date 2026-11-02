@@ -28,6 +28,12 @@ interface TerminalBufferProps {
 
 const SPINNER_FRAMES = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
 const LOADING_DOTS_FRAMES = ['Loading', 'Loading.', 'Loading..', 'Loading...'];
+const HUMAN_THINKING_FRAMES = [
+  'Human is thinking',
+  'Human is thinking.',
+  'Human is thinking..',
+  'Human is thinking...',
+];
 
 export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
   scenario,
@@ -46,14 +52,16 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
   const [showPriorHistory, setShowPriorHistory] = useState<boolean>(false);
   const [spinnerIdx, setSpinnerIdx] = useState<number>(0);
   const [loadingTextIdx, setLoadingTextIdx] = useState<number>(0);
+  const [humanThinkingIdx, setHumanThinkingIdx] = useState<number>(0);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
   const fullThinkingText = turn.thinking;
+  const isResolving = phase === 'SLAM' || phase === 'RESOLVING';
   const isStreaming = phase === 'WAITING_STREAM' || (phase !== 'READY' && streamedChars < fullThinkingText.length);
 
-  // Animated spinner and animated "Loading..." text while situation is streaming
+  // Animated spinner and animated "Loading..." / "Human is thinking..." text
   useEffect(() => {
-    if (!isStreaming) return;
+    if (!isStreaming && !isResolving) return;
 
     const spinnerTimer = window.setInterval(() => {
       setSpinnerIdx((prev) => (prev + 1) % SPINNER_FRAMES.length);
@@ -61,13 +69,14 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
 
     const loadingTextTimer = window.setInterval(() => {
       setLoadingTextIdx((prev) => (prev + 1) % LOADING_DOTS_FRAMES.length);
+      setHumanThinkingIdx((prev) => (prev + 1) % HUMAN_THINKING_FRAMES.length);
     }, 280);
 
     return () => {
       window.clearInterval(spinnerTimer);
       window.clearInterval(loadingTextTimer);
     };
-  }, [isStreaming]);
+  }, [isStreaming, isResolving]);
 
   // Stream the thinking & command output with procedural key clicks on each turn
   useEffect(() => {
@@ -110,7 +119,7 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
       scrollContainerRef.current.scrollTop =
         scrollContainerRef.current.scrollHeight;
     }
-  }, [turn.turnNumber, streamedChars, isStreaming, activeOutcome, ending]);
+  }, [turn.turnNumber, streamedChars, isStreaming, isResolving, activeOutcome, ending]);
 
   const visibleThinking = fullThinkingText.slice(0, streamedChars);
 
@@ -246,7 +255,7 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
               <div className="thinking-close-tag">&lt;/thinking&gt;</div>
             </div>
 
-            {/* Immediate Consequence Cascade during SLAM / RESOLVING */}
+            {/* Immediate Consequence Cascade during SLAM / RESOLVING with Human Thinking Jitter Indicator */}
             {activeOutcome && (
               <div
                 className={`terminal-outcome-cascade outcome-${activeOutcome.outcome.severity}`}
@@ -265,6 +274,19 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
                     {line}
                   </div>
                 ))}
+
+                {/* Animated "Human is thinking..." jitter banner */}
+                <div className="terminal-human-thinking-row" aria-live="polite">
+                  <span className="terminal-human-glyph" aria-hidden="true">
+                    {SPINNER_FRAMES[spinnerIdx]}
+                  </span>
+                  <span className="terminal-human-text">
+                    {HUMAN_THINKING_FRAMES[humanThinkingIdx]}
+                  </span>
+                  <span className="terminal-human-sub">
+                    [Operator Dave evaluating impact / compliance logs]
+                  </span>
+                </div>
               </div>
             )}
 

@@ -837,6 +837,44 @@ body,
   letter-spacing: 0.04em;
 }
 
+.human-thinking-headline {
+  color: var(--sovereign-gold);
+}
+
+.human-eval-panel {
+  border-color: var(--sovereign-gold);
+  box-shadow: 0 0 16px var(--gold-tint);
+}
+
+.terminal-human-thinking-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--sovereign-gold);
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.terminal-human-glyph {
+  font-size: 15px;
+  color: var(--sovereign-gold);
+  font-weight: 700;
+}
+
+.terminal-human-text {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--sovereign-gold);
+  letter-spacing: 0.04em;
+  min-width: 145px;
+}
+
+.terminal-human-sub {
+  font-size: 11px;
+  color: var(--bone-muted);
+}
+
 .waiting-ascii-progress {
   font-family: var(--font-mono);
   font-size: 14px;

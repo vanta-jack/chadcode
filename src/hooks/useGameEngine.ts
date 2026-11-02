@@ -178,7 +178,11 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
         setTimeoutCount(nextTimeouts);
       }
 
-      const resolveDelayMs = outcome.severity === 'catastrophic' ? 1200 : 900;
+      // Deliberate 4–8 seconds random jitter delay while "Human is thinking..."
+      const randomJitterMs = isTimeout
+        ? 1500
+        : Math.floor(4000 + Math.random() * 4000); // 4000ms to 8000ms
+
       const advanceTimer = window.setTimeout(() => {
         // Check if an ending is reached (Turn 10 or explicit endingId or 3 timeouts)
         if (nextTimeouts >= 3 && scenario.endings['ending-chud']) {
@@ -208,9 +212,9 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
         setTimerSec(nextTurnObj.timerSec);
         setSelectedChoiceKey(null);
         setActiveOutcome(null);
-        // Enter WAITING_STREAM so next choices are hidden until stream completes
+        // Enter WAITING_STREAM so next choices are hidden until situation stream completes
         setPhase('WAITING_STREAM');
-      }, resolveDelayMs);
+      }, randomJitterMs);
 
       timersRef.current.push(advanceTimer);
     },
