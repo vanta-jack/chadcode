@@ -26,6 +26,9 @@ interface TerminalBufferProps {
   onSelectScenario: (id: string) => void;
 }
 
+const SPINNER_FRAMES = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+const LOADING_DOTS_FRAMES = ['Loading', 'Loading.', 'Loading..', 'Loading...'];
+
 export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
   scenario,
   turn,
@@ -41,9 +44,30 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
   const [streamedChars, setStreamedChars] = useState<number>(0);
   const [thinkingCollapsed, setThinkingCollapsed] = useState<boolean>(false);
   const [showPriorHistory, setShowPriorHistory] = useState<boolean>(false);
+  const [spinnerIdx, setSpinnerIdx] = useState<number>(0);
+  const [loadingTextIdx, setLoadingTextIdx] = useState<number>(0);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
   const fullThinkingText = turn.thinking;
+  const isStreaming = phase === 'WAITING_STREAM' || (phase !== 'READY' && streamedChars < fullThinkingText.length);
+
+  // Animated spinner and animated "Loading..." text while situation is streaming
+  useEffect(() => {
+    if (!isStreaming) return;
+
+    const spinnerTimer = window.setInterval(() => {
+      setSpinnerIdx((prev) => (prev + 1) % SPINNER_FRAMES.length);
+    }, 70);
+
+    const loadingTextTimer = window.setInterval(() => {
+      setLoadingTextIdx((prev) => (prev + 1) % LOADING_DOTS_FRAMES.length);
+    }, 280);
+
+    return () => {
+      window.clearInterval(spinnerTimer);
+      window.clearInterval(loadingTextTimer);
+    };
+  }, [isStreaming]);
 
   // Stream the thinking & command output with procedural key clicks on each turn
   useEffect(() => {
@@ -59,7 +83,7 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
     let tickCounter = 0;
 
     const interval = window.setInterval(() => {
-      current += 8;
+      current += 6;
       tickCounter += 1;
       if (tickCounter % 3 === 0) {
         onKeyClick();
@@ -67,15 +91,15 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
       if (current >= totalLen) {
         setStreamedChars(totalLen);
         window.clearInterval(interval);
-        // Small graceful pause before notifying stream completion
+        // Small graceful pause so the user can register the completed thinking
         const doneTimer = window.setTimeout(() => {
           onStreamComplete();
-        }, 160);
+        }, 350);
         return () => window.clearTimeout(doneTimer);
       } else {
         setStreamedChars(current);
       }
-    }, 18);
+    }, 22);
 
     return () => window.clearInterval(interval);
   }, [turn.turnNumber, scenario.id, fullThinkingText, phase, onKeyClick, onStreamComplete]);
@@ -86,7 +110,7 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
       scrollContainerRef.current.scrollTop =
         scrollContainerRef.current.scrollHeight;
     }
-  }, [turn.turnNumber, streamedChars, activeOutcome, ending]);
+  }, [turn.turnNumber, streamedChars, isStreaming, activeOutcome, ending]);
 
   const visibleThinking = fullThinkingText.slice(0, streamedChars);
 
@@ -244,14 +268,29 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
               </div>
             )}
 
-            {/* Active Prompt Line */}
-            <div className="terminal-prompt-line">
-              <span className="prompt-sigil">chad &gt;</span>{' '}
-              <span className="prompt-dilemma">{turn.prompt}</span>
-              <span className="terminal-cursor" aria-hidden="true">
-                █
-              </span>
-            </div>
+            {/* Active Prompt Line OR Animated Spinner Loading State */}
+            {isStreaming ? (
+              <div className="terminal-prompt-loading-row" role="status" aria-live="polite">
+                <span className="prompt-sigil">chad &gt;</span>{' '}
+                <span className="terminal-loading-spinner" aria-hidden="true">
+                  {SPINNER_FRAMES[spinnerIdx]}
+                </span>
+                <span className="terminal-loading-text">
+                  {LOADING_DOTS_FRAMES[loadingTextIdx]}
+                </span>
+                <span className="terminal-cursor" aria-hidden="true">
+                  █
+                </span>
+              </div>
+            ) : (
+              <div className="terminal-prompt-line">
+                <span className="prompt-sigil">chad &gt;</span>{' '}
+                <span className="prompt-dilemma">{turn.prompt}</span>
+                <span className="terminal-cursor" aria-hidden="true">
+                  █
+                </span>
+              </div>
+            )}
           </div>
         )}
 

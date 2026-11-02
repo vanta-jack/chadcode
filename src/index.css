@@ -688,6 +688,30 @@ body,
   word-break: break-word;
 }
 
+.terminal-prompt-loading-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1.35;
+  font-weight: 700;
+  color: var(--sovereign-gold);
+  padding-top: 4px;
+}
+
+.terminal-loading-spinner {
+  font-size: 16px;
+  color: var(--sovereign-gold);
+  font-weight: 700;
+  display: inline-block;
+}
+
+.terminal-loading-text {
+  color: var(--sovereign-gold);
+  letter-spacing: 0.05em;
+  min-width: 80px;
+}
+
 .terminal-cursor {
   display: inline-block;
   margin-left: 4px;
