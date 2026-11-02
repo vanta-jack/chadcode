@@ -30,6 +30,7 @@ html,
 body,
 #root {
   width: 100%;
+  height: 100%;
   min-height: 100vh;
   min-height: 100dvh;
   background-color: var(--canvas-void);
@@ -38,7 +39,7 @@ body,
   font-size: 13px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 /* ==========================================================================
@@ -46,18 +47,19 @@ body,
    ========================================================================== */
 .sensory-stage-root {
   position: relative;
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
   width: 100%;
   background-color: var(--canvas-void);
   transform-origin: center center;
+  overflow: hidden;
 }
 
 .sensory-stage-content {
   position: relative;
   z-index: 2;
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -150,25 +152,48 @@ body,
 }
 
 /* ==========================================================================
-   Main Matrix Shell Layout
+   Main Matrix Shell Layout (Desktop 3 Columns vs Mobile 3 Tabs)
    ========================================================================== */
 .chadcode-matrix-shell {
   width: 100%;
-  max-width: 1260px;
+  height: 100%;
+  max-width: 1680px;
   margin: 0 auto;
-  padding: 12px 16px calc(24px + env(safe-area-inset-bottom, 0px));
+  padding: 12px 16px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  min-height: 100vh;
-  min-height: 100dvh;
+  overflow: hidden;
 }
 
-.chadcode-dual-layer {
+/* Desktop: Pure 3-Column Parallel Layout */
+.chadcode-tri-layout {
+  display: grid;
+  grid-template-columns: 310px 1.4fr 1fr;
+  gap: 14px;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+.tri-column {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.tri-column-menu {
+  overflow-y: auto;
+}
+
+.tri-column-situation {
   flex: 1;
+}
+
+.tri-column-action {
+  overflow-y: auto;
 }
 
 /* ==========================================================================
@@ -177,19 +202,16 @@ body,
 .arcade-hud {
   background-color: var(--surface-panel);
   border: 1px solid var(--border-panel);
-  padding: 10px 14px;
+  padding: 12px 14px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
-  overflow: hidden;
 }
 
 .hud-top-row {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 10px;
 }
 
@@ -223,15 +245,14 @@ body,
 
 .hud-scenario-selector {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  max-width: 100%;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
 }
 
 .hud-field-label {
   color: var(--bone-muted);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .hud-select {
@@ -243,7 +264,7 @@ body,
   padding: 6px 10px;
   border-radius: 0px;
   cursor: pointer;
-  max-width: 100%;
+  width: 100%;
 }
 
 .hud-select:focus-visible {
@@ -253,10 +274,9 @@ body,
 
 .hud-utility-controls {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 8px;
-  flex-wrap: wrap;
-  max-width: 100%;
+  width: 100%;
 }
 
 .hud-btn {
@@ -271,7 +291,7 @@ body,
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  max-width: 100%;
+  width: 100%;
   white-space: normal;
   text-align: left;
 }
@@ -304,11 +324,11 @@ body,
 .hud-timer-module {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   border: 1px solid var(--border-panel);
   background-color: var(--canvas-void);
-  padding: 4px 10px 4px 6px;
-  flex-shrink: 0;
+  padding: 6px 12px;
+  width: 100%;
 }
 
 .hud-timer-critical {
@@ -327,7 +347,7 @@ body,
 }
 
 .hud-timer-digits {
-  font-size: 24px;
+  font-size: 26px;
   line-height: 1.1;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
@@ -341,9 +361,7 @@ body,
 /* 5-Node Progression Constellation */
 .hud-constellation-row {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 10px;
   padding-top: 8px;
   border-top: 1px solid var(--border-subtle);
@@ -352,10 +370,9 @@ body,
 
 .hud-constellation-track {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  max-width: 100%;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
 }
 
 .hud-turn-badge {
@@ -364,21 +381,20 @@ body,
   font-variant-numeric: tabular-nums;
   border: 1px solid var(--sovereign-gold);
   padding: 2px 8px;
-  flex-shrink: 0;
+  align-self: flex-start;
 }
 
 .constellation-nodes {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 6px;
-  flex-wrap: wrap;
-  max-width: 100%;
+  width: 100%;
 }
 
 .constellation-node {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   font-size: 12px;
   color: var(--bone-muted);
 }
@@ -393,28 +409,25 @@ body,
 }
 
 .constellation-connector {
-  width: 16px;
-  height: 1px;
-  background-color: var(--bone-faint);
-  flex-shrink: 0;
-}
-
-.constellation-connector.connector-complete {
-  background-color: var(--sovereign-gold);
+  display: none;
 }
 
 .hud-metrics-strip {
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: space-between;
+  gap: 8px;
   font-variant-numeric: tabular-nums;
   flex-wrap: wrap;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .metric-item {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
+  font-size: 12px;
 }
 
 .metric-label {
@@ -439,8 +452,8 @@ body,
   padding: 10px 14px;
   display: flex;
   flex-direction: column;
-  flex: 1;
-  min-height: 280px;
+  height: 100%;
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -450,6 +463,7 @@ body,
   overflow: hidden;
   font-size: 13px;
   user-select: none;
+  flex-shrink: 0;
 }
 
 .terminal-viewport {
@@ -458,6 +472,7 @@ body,
   flex-direction: column;
   gap: 10px;
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -472,6 +487,7 @@ body,
   border-bottom: 1px solid var(--border-subtle);
   padding-bottom: 6px;
   word-break: break-word;
+  flex-shrink: 0;
 }
 
 .terminal-inline-toggle {
@@ -663,7 +679,7 @@ body,
 }
 
 .terminal-prompt-line {
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.35;
   font-weight: 700;
   color: var(--monolith-bone);
@@ -699,7 +715,7 @@ body,
 .ready-start-banner {
   background-color: var(--surface-panel);
   border: 1px solid var(--border-panel);
-  padding: 16px 20px;
+  padding: 18px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -729,7 +745,7 @@ body,
   border-radius: 0px;
   padding: 14px 28px;
   font-family: var(--font-mono);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   display: inline-flex;
@@ -762,9 +778,9 @@ body,
 }
 
 .action-deck-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .vector-choice-card {
@@ -772,14 +788,14 @@ body,
   background-color: var(--surface-panel);
   border: 1px solid var(--border-panel);
   border-radius: 0px;
-  padding: 12px 14px;
+  padding: 10px 12px;
   text-align: left;
   font-family: var(--font-mono);
   color: var(--monolith-bone);
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   transition: transform 80ms ease-out, border-color 80ms ease-out;
   min-width: 0;
 }
@@ -787,7 +803,7 @@ body,
 .vector-choice-card:hover:not(:disabled),
 .vector-choice-card:focus-visible:not(:disabled) {
   border-color: var(--sovereign-gold);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   outline: none;
 }
 
@@ -848,29 +864,29 @@ body,
 .vector-key-badge {
   color: var(--sovereign-gold);
   font-weight: 700;
-  font-size: 14px;
+  font-size: 13px;
   flex-shrink: 0;
 }
 
 .vector-tactical-tag {
   color: var(--bone-muted);
-  font-size: 12px;
+  font-size: 11px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Choice Option Text: 14px / 1.4 (font-weight: 500), wrapped naturally */
+/* Choice Option Text */
 .vector-card-label {
   font-size: 13px;
-  line-height: 1.4;
+  line-height: 1.35;
   font-weight: 500;
   color: var(--monolith-bone);
   word-break: break-word;
 }
 
 .vector-card-cmd {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--bone-muted);
   white-space: normal;
   word-break: break-all;
@@ -998,6 +1014,83 @@ body,
 }
 
 /* ==========================================================================
+   Mobile Bottom-Center Pill Tab Bar
+   ========================================================================== */
+.mobile-tab-pill-bar {
+  display: none;
+  position: fixed;
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  left: 0;
+  right: 0;
+  justify-content: center;
+  align-items: center;
+  z-index: 500;
+  pointer-events: none;
+}
+
+.mobile-tab-pill-container {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  background-color: rgba(17, 17, 16, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border-panel);
+  border-radius: 9999px;
+  padding: 4px 6px;
+  gap: 4px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.8), 0 0 12px rgba(229, 169, 60, 0.15);
+}
+
+.mobile-tab-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  color: var(--bone-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 100ms ease-out;
+}
+
+.mobile-tab-btn:hover {
+  color: var(--monolith-bone);
+}
+
+.mobile-tab-btn.tab-btn-active {
+  background-color: var(--canvas-void);
+  border-color: var(--sovereign-gold);
+  color: var(--sovereign-gold);
+}
+
+.tab-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.tab-urgent-dot {
+  position: absolute;
+  top: -2px;
+  right: -3px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--threat-vermilion);
+  box-shadow: 0 0 6px var(--threat-vermilion);
+  animation: critical-vignette-pulse 0.4s infinite ease-in-out;
+}
+
+.mobile-tab-label {
+  font-size: 12px;
+}
+
+/* ==========================================================================
    BYOK Coming Soon Modal
    ========================================================================== */
 .byok-modal-backdrop {
@@ -1093,78 +1186,44 @@ body,
 }
 
 /* ==========================================================================
-   Accessibility & Responsive Breakpoints
+   Responsive Adaptations: Mobile 3-Tab Architecture
    ========================================================================== */
-@media (max-width: 780px) {
+@media (max-width: 960px) {
   .chadcode-matrix-shell {
-    padding: 8px 10px calc(20px + env(safe-area-inset-bottom, 0px));
+    padding: 8px 10px calc(68px + env(safe-area-inset-bottom, 0px));
   }
 
-  .action-deck-grid {
-    grid-template-columns: 1fr;
-    gap: 8px;
+  .chadcode-tri-layout {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
   }
 
-  .vector-card-label {
-    font-size: 13px;
+  .tri-column {
+    display: none;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  .tri-column.tab-visible {
+    display: flex;
+  }
+
+  .tri-column.tab-hidden {
+    display: none !important;
+  }
+
+  .mobile-tab-pill-bar {
+    display: flex;
   }
 
   .terminal-box-border,
   .diff-box-header,
   .diff-box-footer {
     display: none;
-  }
-
-  .hud-top-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-  }
-
-  .hud-brand-block {
-    justify-content: flex-start;
-  }
-
-  .hud-scenario-selector {
-    justify-content: space-between;
-  }
-
-  .hud-select {
-    flex: 1;
-    min-width: 140px;
-  }
-
-  .hud-utility-controls {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .hud-timer-module {
-    align-self: flex-start;
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .hud-constellation-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-  }
-
-  .constellation-nodes {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-    gap: 4px;
-    width: 100%;
-  }
-
-  .constellation-connector {
-    display: none;
-  }
-
-  .hud-metrics-strip {
-    justify-content: space-between;
-    width: 100%;
   }
 }
 
