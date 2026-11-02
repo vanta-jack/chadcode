@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 interface ByokModalProps {
   isOpen: boolean;
@@ -6,7 +6,7 @@ interface ByokModalProps {
 }
 
 export const ByokModal: React.FC<ByokModalProps> = ({ isOpen, onClose }) => {
-  useEffect(() => {
+  React.useEffect(() => {
     if (!isOpen) return;
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -50,12 +50,14 @@ export const ByokModal: React.FC<ByokModalProps> = ({ isOpen, onClose }) => {
           mode with deterministic static scenarios (Scenarios 01–05).
         </p>
 
-        <div className="byok-terminal-preview">
-          <div>┌── [BYOK SYNTHESIS PIPELINE — LOCKED] ─────────────────────┐</div>
-          <div>│ status: OFFLINE (Zero external API calls on Day-0 build) │</div>
-          <div>│ schema: 10-Turn Branching CYOA + 5 Ending Trajectories    │</div>
-          <div>│ mode:   Client-side Gemini API Key vault (Coming Soon...) │</div>
-          <div>└───────────────────────────────────────────────────────────┘</div>
+        <div className="byok-terminal-preview-container">
+          <div className="byok-terminal-preview">
+            <div>┌── [BYOK SYNTHESIS PIPELINE — LOCKED] ─────────────────────┐</div>
+            <div>│ status: OFFLINE (Zero external API calls on Day-0 build) │</div>
+            <div>│ schema: 10-Turn Branching CYOA + 5 Ending Trajectories    │</div>
+            <div>│ mode:   Client-side Gemini API Key vault (Coming Soon...) │</div>
+            <div>└───────────────────────────────────────────────────────────┘</div>
+          </div>
         </div>
 
         <div className="byok-locked-input-row">

@@ -55,12 +55,8 @@ export const SensoryStage: React.FC<SensoryStageProps> = ({
   const isLowTime = phase === 'ACTIVE' && timerSec <= 5 && timerSec > 0;
 
   return (
-    <div
-      className={`sensory-stage-root ${motionClass} ${
-        isLowTime ? 'sensory-low-time-jitter' : ''
-      }`}
-    >
-      {/* Low-time pulsing vermilion perimeter vignette */}
+    <>
+      {/* Low-time pulsing vermilion perimeter vignette placed outside transformed root */}
       <div
         className={`sensory-vignette ${
           isLowTime ? 'sensory-vignette-active' : ''
@@ -80,7 +76,13 @@ export const SensoryStage: React.FC<SensoryStageProps> = ({
         />
       )}
 
-      <div className="sensory-stage-content">{children}</div>
-    </div>
+      <div
+        className={`sensory-stage-root ${motionClass} ${
+          isLowTime ? 'sensory-low-time-jitter' : ''
+        }`}
+      >
+        <div className="sensory-stage-content">{children}</div>
+      </div>
+    </>
   );
 };
