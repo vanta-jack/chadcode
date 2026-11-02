@@ -7,6 +7,7 @@ interface ActionDeckProps {
   phase: GamePhase;
   selectedChoiceKey: string | null;
   disabled: boolean;
+  onStartGame: () => void;
   onCommitChoice: (choice: Choice) => void;
   onHoverTick: () => void;
   onRestart: () => void;
@@ -17,11 +18,12 @@ export const ActionDeck: React.FC<ActionDeckProps> = ({
   phase,
   selectedChoiceKey,
   disabled,
+  onStartGame,
   onCommitChoice,
   onHoverTick,
   onRestart,
 }) => {
-  // Global keyboard bindings [1-4] and [A-D]
+  // Global keyboard bindings [1-4], [A-D], [Enter/Space to Start]
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (disabled) return;
@@ -32,6 +34,14 @@ export const ActionDeck: React.FC<ActionDeckProps> = ({
           target.tagName === 'SELECT' ||
           target.tagName === 'TEXTAREA')
       ) {
+        return;
+      }
+
+      if (phase === 'READY') {
+        if (event.key === 'Enter' || event.key === ' ' || event.key === 's' || event.key === 'S') {
+          event.preventDefault();
+          onStartGame();
+        }
         return;
       }
 
@@ -69,7 +79,44 @@ export const ActionDeck: React.FC<ActionDeckProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [choices, disabled, onCommitChoice, onRestart, phase]);
+  }, [choices, disabled, onCommitChoice, onRestart, onStartGame, phase]);
+
+  if (phase === 'READY') {
+    return (
+      <section
+        className="action-deck-section"
+        aria-label="Mission staging gate"
+      >
+        <div className="action-deck-header">
+          <span className="deck-instruction">
+            Mission briefing ready [Review objectives above before initiating timer]
+          </span>
+        </div>
+
+        <div className="ready-start-banner">
+          <div className="ready-banner-info">
+            <span className="ready-banner-sigil">◆</span>
+            <span>
+              Watchdog scanner is dormant. Timer initiates upon operator authorization.
+            </span>
+          </div>
+
+          <button
+            type="button"
+            className="hud-btn-start-game"
+            onClick={onStartGame}
+            onMouseEnter={onHoverTick}
+            autoFocus
+          >
+            <span className="btn-bracket">[</span>
+            <span className="btn-label">INITIATE MISSION // START</span>
+            <span className="btn-subtext">[Enter or Space]</span>
+            <span className="btn-bracket">]</span>
+          </button>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section

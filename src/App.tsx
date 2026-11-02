@@ -65,6 +65,7 @@ export const App: React.FC = () => {
             phase={engine.phase}
             selectedChoiceKey={engine.selectedChoiceKey}
             disabled={byokOpen}
+            onStartGame={engine.startGame}
             onCommitChoice={engine.commitChoice}
             onHoverTick={sound.playHoverTick}
             onRestart={engine.restartScenario}

@@ -679,7 +679,7 @@ body,
 }
 
 /* ==========================================================================
-   ActionDeck: 4 Floating Vector Wireframe Prisms (Hyperforma)
+   ActionDeck: 4 Floating Vector Wireframe Prisms (Hyperforma) & Ready Gate
    ========================================================================== */
 .action-deck-section {
   display: flex;
@@ -694,6 +694,71 @@ body,
   align-items: center;
   color: var(--bone-muted);
   font-size: 12px;
+}
+
+.ready-start-banner {
+  background-color: var(--surface-panel);
+  border: 1px solid var(--border-panel);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.ready-banner-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--bone-muted);
+  font-size: 13px;
+  max-width: 65ch;
+  line-height: 1.4;
+}
+
+.ready-banner-sigil {
+  color: var(--sovereign-gold);
+}
+
+.hud-btn-start-game {
+  background-color: var(--canvas-void);
+  color: var(--sovereign-gold);
+  border: 2px solid var(--sovereign-gold);
+  border-radius: 0px;
+  padding: 14px 28px;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background-color 100ms ease-out, transform 80ms ease-out;
+  box-shadow: 0 0 16px var(--gold-tint);
+}
+
+.hud-btn-start-game:hover,
+.hud-btn-start-game:focus-visible {
+  background-color: var(--gold-tint);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.hud-btn-start-game .btn-label {
+  letter-spacing: 0.05em;
+}
+
+.hud-btn-start-game .btn-subtext {
+  font-size: 12px;
+  color: var(--bone-muted);
+  font-weight: 500;
+}
+
+.hud-btn-start-game .btn-bracket {
+  color: var(--monolith-bone);
 }
 
 .action-deck-grid {

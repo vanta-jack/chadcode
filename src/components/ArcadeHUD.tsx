@@ -179,8 +179,12 @@ export const ArcadeHUD: React.FC<ArcadeHUDProps> = ({
             />
           </svg>
           <div className="hud-timer-readout">
-            <span className="hud-timer-caption">Time remaining</span>
-            <span className="hud-timer-digits">{formattedTime}</span>
+            <span className="hud-timer-caption">
+              {phase === 'READY' ? 'Timer (Armed)' : 'Time remaining'}
+            </span>
+            <span className="hud-timer-digits">
+              {phase === 'READY' ? formattedTime : formattedTime}
+            </span>
           </div>
         </div>
       </div>

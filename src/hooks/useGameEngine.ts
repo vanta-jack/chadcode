@@ -17,7 +17,7 @@ import {
   playTimeoutBuzzer,
 } from '../audio/sound';
 
-export type GamePhase = 'LOADING' | 'ACTIVE' | 'SLAM' | 'RESOLVING' | 'ENDED';
+export type GamePhase = 'READY' | 'LOADING' | 'ACTIVE' | 'SLAM' | 'RESOLVING' | 'ENDED';
 
 export type SensoryEvent =
   | { type: 'NONE'; timestamp: number }
@@ -33,7 +33,7 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
     () => FALLBACK_SCENARIOS[initialScenarioId] ?? SCENARIO_LIST[0]
   );
   const [turnIndex, setTurnIndex] = useState<number>(0); // 0..9 (Turn 1..10)
-  const [phase, setPhase] = useState<GamePhase>('ACTIVE');
+  const [phase, setPhase] = useState<GamePhase>('READY');
   const [timerSec, setTimerSec] = useState<number>(
     () => (FALLBACK_SCENARIOS[initialScenarioId] ?? SCENARIO_LIST[0]).turns[0].timerSec
   );
@@ -65,7 +65,7 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
 
   // Load scenario JSON asynchronously from ./scenarios/scenario-X.json with fallback
   const loadScenario = useCallback(
-    async (targetId: string) => {
+    async (targetId: string, autoStart: boolean = false) => {
       clearScheduledTimers();
       setPhase('LOADING');
       setSelectedChoiceKey(null);
@@ -97,15 +97,22 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
       setMetrics({ ...loaded.initialMetrics });
       setTimerSec(loaded.turns[0].timerSec);
       setSensoryEvent({ type: 'NONE', timestamp: Date.now() });
-      setPhase('ACTIVE');
+      setPhase(autoStart ? 'ACTIVE' : 'READY');
     },
     [clearScheduledTimers]
   );
 
   useEffect(() => {
-    loadScenario(initialScenarioId);
+    loadScenario(initialScenarioId, false);
     return () => clearScheduledTimers();
   }, [initialScenarioId, loadScenario, clearScheduledTimers]);
+
+  const startGame = useCallback(() => {
+    if (phase !== 'READY') return;
+    playCommitSlam();
+    setSensoryEvent({ type: 'COMMIT_SLAM', timestamp: Date.now() });
+    setPhase('ACTIVE');
+  }, [phase]);
 
   const currentTurn: Turn = scenario.turns[turnIndex] ?? scenario.turns[0];
 
@@ -248,7 +255,7 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
     );
   }, [applyOutcomeAndAdvance, clearScheduledTimers, currentTurn.timeoutOutcome, phase]);
 
-  // Single functional engine variable: timerSec countdown loop
+  // Single functional engine variable: timerSec countdown loop (runs strictly when phase === 'ACTIVE')
   useEffect(() => {
     if (phase !== 'ACTIVE' || isPaused) return;
 
@@ -285,13 +292,13 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
 
   const selectScenario = useCallback(
     (id: string) => {
-      loadScenario(id);
+      loadScenario(id, false);
     },
     [loadScenario]
   );
 
   const restartScenario = useCallback(() => {
-    loadScenario(scenarioId);
+    loadScenario(scenarioId, false);
   }, [loadScenario, scenarioId]);
 
   return {
@@ -311,6 +318,7 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
     selectedChoiceKey,
     isPaused,
     setIsPaused,
+    startGame,
     commitChoice,
     selectScenario,
     restartScenario,
