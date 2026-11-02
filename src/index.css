@@ -1,0 +1,977 @@
+:root {
+  /* Strict 4-Color Discipline (DESIGN.md Section 3) */
+  --canvas-void: #000000;
+  --terminal-surface: #06080D;
+  --surface-panel: #111110;
+  --monolith-bone: #F5F5F0;
+  --bone-muted: rgba(245, 245, 240, 0.6);
+  --bone-faint: rgba(245, 245, 240, 0.2);
+  --sovereign-gold: #E5A93C;
+  --gold-tint: rgba(229, 169, 60, 0.12);
+  --threat-vermilion: #D9383A;
+  --vermilion-tint: rgba(217, 56, 58, 0.14);
+  --border-subtle: #1C1F26;
+  --border-panel: #222220;
+
+  /* Typography */
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  --font-display: 'Cinzel', 'JetBrains Mono', serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--canvas-void);
+  color: var(--monolith-bone);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   SensoryStage: Thumper Tactility & Urgency Vignette
+   ========================================================================== */
+.sensory-stage-root {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--canvas-void);
+  transform-origin: center center;
+}
+
+.sensory-stage-content {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 50ms Commit Slam: camera punch forward */
+.thumper-commit-slam {
+  transform: scale(1.02);
+}
+
+/* 150ms Minor Setback: 3px horizontal micro-jitter */
+@keyframes minor-shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  50% { transform: translateX(3px); }
+  75% { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}
+
+.thumper-minor-shake {
+  animation: minor-shake 150ms linear;
+}
+
+/* 600ms Severe / Timeout Consequence: 12px violent shake */
+@keyframes violent-shake {
+  0% { transform: translate(0, 0); }
+  10% { transform: translate(-12px, 4px); }
+  20% { transform: translate(11px, -6px); }
+  30% { transform: translate(-10px, -4px); }
+  40% { transform: translate(10px, 5px); }
+  50% { transform: translate(-8px, 3px); }
+  65% { transform: translate(7px, -3px); }
+  80% { transform: translate(-4px, 2px); }
+  100% { transform: translate(0, 0); }
+}
+
+.thumper-catastrophic-shake {
+  animation: violent-shake 600ms cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+/* Instantaneous Flash Overlay */
+.sensory-flash-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40;
+}
+
+.sensory-flash-bone {
+  background-color: rgba(245, 245, 240, 0.22);
+}
+
+.sensory-flash-vermilion {
+  background-color: rgba(217, 56, 58, 0.34);
+}
+
+/* Low Time Pulse (timerSec <= 5) Perimeter Vignette */
+@keyframes critical-vignette-pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.95; }
+}
+
+.sensory-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 30;
+  opacity: 0;
+  box-shadow: inset 0 0 90px 18px var(--threat-vermilion);
+  border: 1px solid var(--threat-vermilion);
+}
+
+.sensory-vignette-active {
+  animation: critical-vignette-pulse 0.5s infinite ease-in-out;
+}
+
+.sensory-low-time-jitter .terminal-workstation {
+  border-color: var(--threat-vermilion);
+}
+
+/* ==========================================================================
+   Main Matrix Shell Layout
+   ========================================================================== */
+.chadcode-matrix-shell {
+  width: 100%;
+  max-width: 1260px;
+  margin: 0 auto;
+  padding: 12px 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 100vh;
+}
+
+.chadcode-dual-layer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+/* ==========================================================================
+   Layer 2: Non-Diegetic Arcade HUD (Hyperforma Sacred Wireframes)
+   ========================================================================== */
+.arcade-hud {
+  background-color: var(--surface-panel);
+  border: 1px solid var(--border-panel);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hud-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.hud-brand-block {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hud-emblem {
+  color: var(--monolith-bone);
+  display: flex;
+  align-items: center;
+}
+
+.hud-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  line-height: 1.3;
+  font-weight: 700;
+  color: var(--monolith-bone);
+}
+
+.hud-subtitle {
+  font-size: 13px;
+  color: var(--bone-muted);
+}
+
+.hud-scenario-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hud-field-label {
+  color: var(--bone-muted);
+  font-size: 13px;
+}
+
+.hud-select {
+  background-color: var(--canvas-void);
+  color: var(--monolith-bone);
+  border: 1px solid var(--border-panel);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 5px 10px;
+  border-radius: 0px;
+  cursor: pointer;
+}
+
+.hud-select:focus-visible {
+  outline: 1px solid var(--sovereign-gold);
+  border-color: var(--sovereign-gold);
+}
+
+.hud-utility-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hud-btn {
+  background-color: var(--canvas-void);
+  color: var(--monolith-bone);
+  border: 1px solid var(--border-panel);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 5px 10px;
+  border-radius: 0px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hud-btn:hover:not(:disabled) {
+  border-color: var(--sovereign-gold);
+  color: var(--sovereign-gold);
+}
+
+.hud-btn:focus-visible {
+  outline: 1px solid var(--sovereign-gold);
+}
+
+.hud-btn-gold {
+  border-color: var(--sovereign-gold);
+  color: var(--sovereign-gold);
+  background-color: var(--gold-tint);
+}
+
+.hud-btn-muted {
+  color: var(--bone-muted);
+}
+
+.byok-lock-glyph {
+  color: var(--sovereign-gold);
+}
+
+/* Giant Timer Gauge (24px tabular figures, font-weight 700) */
+.hud-timer-module {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--border-panel);
+  background-color: var(--canvas-void);
+  padding: 4px 10px 4px 6px;
+}
+
+.hud-timer-critical {
+  border-color: var(--threat-vermilion);
+  background-color: var(--vermilion-tint);
+}
+
+.hud-timer-readout {
+  display: flex;
+  flex-direction: column;
+}
+
+.hud-timer-caption {
+  font-size: 13px;
+  color: var(--bone-muted);
+}
+
+.hud-timer-digits {
+  font-size: 24px;
+  line-height: 1.1;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--sovereign-gold);
+}
+
+.hud-timer-critical .hud-timer-digits {
+  color: var(--threat-vermilion);
+}
+
+/* 5-Node Progression Constellation */
+.hud-constellation-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.hud-constellation-track {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hud-turn-badge {
+  color: var(--sovereign-gold);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  border: 1px solid var(--sovereign-gold);
+  padding: 2px 8px;
+}
+
+.constellation-nodes {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.constellation-node {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: var(--bone-muted);
+}
+
+.constellation-node.node-active {
+  color: var(--monolith-bone);
+  font-weight: 700;
+}
+
+.constellation-node.node-complete {
+  color: var(--sovereign-gold);
+}
+
+.constellation-connector {
+  width: 20px;
+  height: 1px;
+  background-color: var(--bone-faint);
+}
+
+.constellation-connector.connector-complete {
+  background-color: var(--sovereign-gold);
+}
+
+.hud-metrics-strip {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.metric-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.metric-label {
+  color: var(--bone-muted);
+}
+
+.metric-value {
+  color: var(--monolith-bone);
+  font-weight: 700;
+}
+
+.metric-danger .metric-value {
+  color: var(--threat-vermilion);
+}
+
+/* ==========================================================================
+   Layer 1: Diegetic Terminal Workstation (Claude Code CLI)
+   ========================================================================== */
+.terminal-workstation {
+  background-color: var(--terminal-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 330px;
+}
+
+.terminal-box-border {
+  color: var(--bone-muted);
+  white-space: pre;
+  overflow: hidden;
+  font-size: 13px;
+  user-select: none;
+}
+
+.terminal-viewport {
+  padding: 8px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.terminal-session-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: var(--bone-muted);
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 6px;
+}
+
+.terminal-inline-toggle {
+  background: none;
+  border: 1px solid var(--border-panel);
+  color: var(--sovereign-gold);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 1px 8px;
+  cursor: pointer;
+}
+
+.terminal-history-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-left: 2px solid var(--border-panel);
+  padding-left: 10px;
+  margin-bottom: 6px;
+}
+
+.history-cmd {
+  color: var(--sovereign-gold);
+}
+
+.history-log-line {
+  color: var(--bone-muted);
+}
+
+.history-severity-catastrophic .history-log-line {
+  color: var(--threat-vermilion);
+}
+
+.terminal-active-turn {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Prompts & Stage Headers: 16px / 1.3 (font-weight: 700) */
+.terminal-stage-header {
+  font-size: 16px;
+  line-height: 1.3;
+  font-weight: 700;
+  color: var(--monolith-bone);
+  max-width: 72ch;
+}
+
+.terminal-command-line {
+  font-size: 13px;
+  line-height: 1.5;
+  max-width: 72ch;
+}
+
+.prompt-sigil {
+  color: var(--sovereign-gold);
+  font-weight: 700;
+}
+
+.command-text {
+  color: var(--monolith-bone);
+}
+
+.terminal-stdout-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 72ch;
+}
+
+.stdout-line {
+  color: var(--bone-muted);
+}
+
+.stdout-line-alert {
+  color: var(--threat-vermilion);
+  font-weight: 700;
+}
+
+/* Git Diff Block (Strict 4-color boundary) */
+.terminal-diff-box {
+  display: flex;
+  flex-direction: column;
+  max-width: 74ch;
+}
+
+.diff-box-header,
+.diff-box-footer {
+  color: var(--bone-muted);
+  white-space: pre;
+  overflow: hidden;
+}
+
+.diff-pre {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding: 2px 0;
+}
+
+.diff-line {
+  padding: 0 8px;
+}
+
+.diff-line-hunk {
+  color: var(--bone-muted);
+}
+
+.diff-line-add {
+  color: var(--sovereign-gold);
+  background-color: var(--gold-tint);
+}
+
+.diff-line-del {
+  color: var(--threat-vermilion);
+  background-color: var(--vermilion-tint);
+}
+
+/* Collapsible <thinking> Stream */
+.terminal-thinking-block {
+  border-left: 2px solid var(--sovereign-gold);
+  padding-left: 10px;
+  max-width: 72ch;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.thinking-toggle-btn {
+  background: none;
+  border: none;
+  color: var(--sovereign-gold);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+}
+
+.thinking-toggle-hint {
+  color: var(--bone-muted);
+}
+
+.thinking-body {
+  color: var(--bone-muted);
+  max-width: 72ch;
+}
+
+.thinking-close-tag {
+  color: var(--sovereign-gold);
+}
+
+.terminal-outcome-cascade {
+  border: 1px solid var(--sovereign-gold);
+  background-color: var(--gold-tint);
+  padding: 8px 12px;
+  max-width: 72ch;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.terminal-outcome-cascade.outcome-catastrophic {
+  border-color: var(--threat-vermilion);
+  background-color: var(--vermilion-tint);
+}
+
+.outcome-command-echo {
+  color: var(--sovereign-gold);
+  font-weight: 700;
+}
+
+.outcome-catastrophic .outcome-command-echo,
+.outcome-catastrophic .outcome-log-line {
+  color: var(--threat-vermilion);
+}
+
+.terminal-prompt-line {
+  font-size: 16px;
+  line-height: 1.3;
+  font-weight: 700;
+  color: var(--monolith-bone);
+  max-width: 72ch;
+  padding-top: 4px;
+}
+
+.terminal-cursor {
+  display: inline-block;
+  margin-left: 4px;
+  color: var(--sovereign-gold);
+}
+
+/* ==========================================================================
+   ActionDeck: 4 Floating Vector Wireframe Prisms (Hyperforma)
+   ========================================================================== */
+.action-deck-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.action-deck-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--bone-muted);
+}
+
+.action-deck-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.vector-choice-card {
+  position: relative;
+  background-color: var(--surface-panel);
+  border: 1px solid var(--border-panel);
+  border-radius: 0px;
+  padding: 12px 14px;
+  text-align: left;
+  font-family: var(--font-mono);
+  color: var(--monolith-bone);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: transform 80ms ease-out, border-color 80ms ease-out;
+}
+
+.vector-choice-card:hover:not(:disabled),
+.vector-choice-card:focus-visible:not(:disabled) {
+  border-color: var(--sovereign-gold);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.vector-card-selected {
+  border-color: var(--sovereign-gold);
+  background-color: var(--gold-tint);
+}
+
+.vector-choice-card:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Sacred geometric corner ticks */
+.vector-corner {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-color: var(--sovereign-gold);
+  pointer-events: none;
+}
+
+.corner-tl {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid var(--sovereign-gold);
+  border-left: 2px solid var(--sovereign-gold);
+}
+
+.corner-tr {
+  top: -1px;
+  right: -1px;
+  border-top: 2px solid var(--sovereign-gold);
+  border-right: 2px solid var(--sovereign-gold);
+}
+
+.corner-bl {
+  bottom: -1px;
+  left: -1px;
+  border-bottom: 2px solid var(--sovereign-gold);
+  border-left: 2px solid var(--sovereign-gold);
+}
+
+.corner-br {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid var(--sovereign-gold);
+  border-right: 2px solid var(--sovereign-gold);
+}
+
+.vector-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.vector-key-badge {
+  color: var(--sovereign-gold);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.vector-tactical-tag {
+  color: var(--bone-muted);
+  font-size: 13px;
+}
+
+/* Choice Option Text: 14px / 1.4 (font-weight: 500), capped < 75ch */
+.vector-card-label {
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--monolith-bone);
+  max-width: 68ch;
+}
+
+.vector-card-cmd {
+  font-size: 13px;
+  color: var(--bone-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cmd-prefix {
+  color: var(--sovereign-gold);
+}
+
+/* ==========================================================================
+   Ending Resolution Dossier
+   ========================================================================== */
+.terminal-ending-dossier {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 74ch;
+  padding: 6px 0;
+}
+
+.ending-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ending-code-tag {
+  padding: 2px 8px;
+  font-weight: 700;
+  border: 1px solid var(--sovereign-gold);
+}
+
+.ending-tag-gold {
+  color: var(--sovereign-gold);
+  border-color: var(--sovereign-gold);
+  background-color: var(--gold-tint);
+}
+
+.ending-tag-vermilion {
+  color: var(--threat-vermilion);
+  border-color: var(--threat-vermilion);
+  background-color: var(--vermilion-tint);
+}
+
+.ending-persona-tag {
+  color: var(--bone-muted);
+}
+
+.ending-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  line-height: 1.3;
+  font-weight: 700;
+  color: var(--monolith-bone);
+}
+
+.ending-verdict {
+  color: var(--sovereign-gold);
+  font-weight: 700;
+}
+
+.traceback-gold {
+  color: var(--sovereign-gold);
+}
+
+.traceback-vermilion {
+  color: var(--threat-vermilion);
+}
+
+.ending-epilogue {
+  color: var(--monolith-bone);
+  max-width: 72ch;
+}
+
+.ending-constellation-matrix {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.matrix-heading {
+  color: var(--bone-muted);
+}
+
+.matrix-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+}
+
+.matrix-card {
+  border: 1px solid var(--border-panel);
+  padding: 6px 8px;
+  background-color: var(--canvas-void);
+}
+
+.matrix-card-current {
+  border-color: var(--sovereign-gold);
+  background-color: var(--gold-tint);
+}
+
+.matrix-card-code {
+  color: var(--sovereign-gold);
+  font-weight: 700;
+}
+
+.matrix-card-title {
+  color: var(--monolith-bone);
+}
+
+.ending-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+
+/* ==========================================================================
+   BYOK Coming Soon Modal
+   ========================================================================== */
+.byok-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.byok-modal-prism {
+  background-color: var(--surface-panel);
+  border: 1px solid var(--sovereign-gold);
+  padding: 20px;
+  max-width: 620px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.byok-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.byok-status-pill {
+  color: var(--sovereign-gold);
+  border: 1px solid var(--sovereign-gold);
+  padding: 2px 8px;
+}
+
+.byok-modal-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.byok-modal-copy {
+  color: var(--bone-muted);
+  max-width: 68ch;
+}
+
+.byok-terminal-preview {
+  background-color: var(--canvas-void);
+  border: 1px solid var(--border-panel);
+  padding: 10px;
+  color: var(--sovereign-gold);
+  font-size: 13px;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.byok-locked-input-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.byok-disabled-input {
+  flex: 1;
+  min-width: 220px;
+  background-color: var(--canvas-void);
+  border: 1px solid var(--border-panel);
+  color: var(--bone-muted);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 6px 10px;
+}
+
+.byok-locked-btn {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Accessibility & Responsive Breakpoints
+   ========================================================================== */
+@media (max-width: 780px) {
+  .action-deck-grid {
+    grid-template-columns: 1fr;
+  }
+  .terminal-box-border,
+  .diff-box-header,
+  .diff-box-footer {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thumper-commit-slam,
+  .thumper-minor-shake,
+  .thumper-catastrophic-shake {
+    animation: none !important;
+    transform: none !important;
+  }
+}
