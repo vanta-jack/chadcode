@@ -1014,6 +1014,270 @@ body,
 }
 
 /* ==========================================================================
+   Floating Top-Middle Capsule Pill & Overlay HUD Modal
+   ========================================================================== */
+.status-pill-top-bar {
+  display: none;
+  position: fixed;
+  top: calc(10px + env(safe-area-inset-top, 0px));
+  left: 0;
+  right: 0;
+  justify-content: center;
+  align-items: center;
+  z-index: 500;
+  pointer-events: none;
+}
+
+.status-pill-btn {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba(17, 17, 16, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border-panel);
+  border-radius: 9999px;
+  padding: 6px 14px;
+  color: var(--monolith-bone);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 10px rgba(229, 169, 60, 0.12);
+  transition: all 100ms ease-out;
+}
+
+.status-pill-btn:hover,
+.status-pill-btn.status-pill-open {
+  border-color: var(--sovereign-gold);
+}
+
+.status-pill-critical {
+  border-color: var(--threat-vermilion);
+  box-shadow: 0 0 14px var(--threat-vermilion);
+}
+
+.pill-mini-timer-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.pill-turn-text {
+  color: var(--sovereign-gold);
+  font-weight: 700;
+}
+
+.pill-time-text {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--sovereign-gold);
+}
+
+.pill-time-critical {
+  color: var(--threat-vermilion);
+}
+
+.pill-divider {
+  color: var(--bone-faint);
+}
+
+.pill-chevron {
+  font-size: 10px;
+  color: var(--bone-muted);
+}
+
+/* Status HUD Overlay Modal */
+.status-hud-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.status-hud-modal-card {
+  background-color: var(--surface-panel);
+  border: 1px solid var(--sovereign-gold);
+  padding: 18px;
+  max-width: 520px;
+  width: 100%;
+  max-height: 85vh;
+  max-height: 85dvh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 0 24px var(--gold-tint);
+}
+
+.status-hud-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 10px;
+}
+
+.status-hud-badge-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud-status-sigil {
+  color: var(--sovereign-gold);
+}
+
+.hud-status-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--monolith-bone);
+}
+
+.hud-btn-close-sm {
+  font-size: 11px;
+  padding: 4px 8px;
+}
+
+/* Big Clock Showcase */
+.status-timer-showcase {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: var(--canvas-void);
+  border: 1px solid var(--border-panel);
+  padding: 12px 14px;
+}
+
+.status-timer-showcase.showcase-critical {
+  border-color: var(--threat-vermilion);
+  background-color: var(--vermilion-tint);
+}
+
+.showcase-readout {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.showcase-caption {
+  font-size: 12px;
+  color: var(--bone-muted);
+}
+
+.showcase-digits {
+  font-size: 32px;
+  line-height: 1;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--sovereign-gold);
+}
+
+.showcase-critical .showcase-digits {
+  color: var(--threat-vermilion);
+}
+
+.showcase-sub {
+  font-size: 11px;
+  color: var(--bone-muted);
+}
+
+/* Constellation in Modal */
+.status-constellation-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.status-box-label {
+  font-size: 12px;
+  color: var(--bone-muted);
+}
+
+.status-nodes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.status-node-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--canvas-void);
+  border: 1px solid var(--border-panel);
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.node-pill-complete {
+  border-color: var(--sovereign-gold);
+  color: var(--sovereign-gold);
+}
+
+.node-pill-current {
+  border-color: var(--sovereign-gold);
+  background-color: var(--gold-tint);
+  color: var(--monolith-bone);
+  font-weight: 700;
+}
+
+.node-pill-pending {
+  color: var(--bone-muted);
+}
+
+.node-pill-bullet {
+  color: var(--sovereign-gold);
+  font-weight: 700;
+}
+
+/* 3 Metrics Row */
+.status-metrics-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.status-metric-cell {
+  background-color: var(--canvas-void);
+  border: 1px solid var(--border-panel);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.status-metric-cell.status-cell-danger {
+  border-color: var(--threat-vermilion);
+}
+
+.status-metric-cell.status-cell-danger .status-metric-val {
+  color: var(--threat-vermilion);
+}
+
+.status-metric-name {
+  font-size: 11px;
+  color: var(--bone-muted);
+}
+
+.status-metric-val {
+  font-size: 16px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--monolith-bone);
+}
+
+/* ==========================================================================
    Mobile Bottom-Center Pill Tab Bar
    ========================================================================== */
 .mobile-tab-pill-bar {
@@ -1190,7 +1454,20 @@ body,
    ========================================================================== */
 @media (max-width: 960px) {
   .chadcode-matrix-shell {
-    padding: 8px 10px calc(68px + env(safe-area-inset-bottom, 0px));
+    padding-top: calc(48px + env(safe-area-inset-top, 0px));
+    padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .status-pill-top-bar {
+    display: flex;
+  }
+
+  /* In mobile viewports, the countdown & constellation are already reachable via the top pill overlay */
+  .tri-column-menu .hud-timer-module,
+  .tri-column-menu .hud-constellation-row {
+    display: none;
   }
 
   .chadcode-tri-layout {

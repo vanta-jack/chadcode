@@ -48,7 +48,7 @@ export const ArcadeHUD: React.FC<ArcadeHUDProps> = ({
 
   return (
     <header className="arcade-hud" aria-label="Non-diegetic operator HUD">
-      {/* Top Bar: Sacred Brand + Scenario Selector + Controls + Timer */}
+      {/* Top Bar: Sacred Brand + Mission Metadata */}
       <div className="hud-top-row">
         <div className="hud-brand-block">
           <div className="hud-emblem" aria-hidden="true">
@@ -133,7 +133,7 @@ export const ArcadeHUD: React.FC<ArcadeHUDProps> = ({
           </button>
         </div>
 
-        {/* Hyperforma Circular SVG Countdown Timer */}
+        {/* Hyperforma Circular SVG Countdown Timer (Desktop Viewport) */}
         <div
           className={`hud-timer-module ${
             isCriticalTime ? 'hud-timer-critical' : ''
@@ -182,14 +182,12 @@ export const ArcadeHUD: React.FC<ArcadeHUDProps> = ({
             <span className="hud-timer-caption">
               {phase === 'READY' ? 'Timer (Armed)' : 'Time remaining'}
             </span>
-            <span className="hud-timer-digits">
-              {phase === 'READY' ? formattedTime : formattedTime}
-            </span>
+            <span className="hud-timer-digits">{formattedTime}</span>
           </div>
         </div>
       </div>
 
-      {/* Bottom Row: 5-Node Sacred Constellation + Turn Counter + Cosmetic Metrics */}
+      {/* Bottom Row: 5-Node Sacred Constellation + Turn Counter + Cosmetic Metrics (Desktop Viewport) */}
       <div className="hud-constellation-row">
         <div
           className="hud-constellation-track"
@@ -208,53 +206,44 @@ export const ArcadeHUD: React.FC<ArcadeHUDProps> = ({
                 phase !== 'ENDED' && currentNodeNum === nodeIndex;
 
               return (
-                <React.Fragment key={nodeLabel}>
-                  <div
-                    className={`constellation-node ${
-                      isCompleted
-                        ? 'node-complete'
-                        : isCurrent
-                        ? 'node-active'
-                        : 'node-pending'
-                    }`}
+                <div
+                  key={nodeLabel}
+                  className={`constellation-node ${
+                    isCompleted
+                      ? 'node-complete'
+                      : isCurrent
+                      ? 'node-active'
+                      : 'node-pending'
+                  }`}
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="16"
+                    height="16"
+                    aria-hidden="true"
                   >
-                    <svg
-                      viewBox="0 0 24 24"
-                      width="18"
-                      height="18"
-                      aria-hidden="true"
-                    >
-                      <polygon
-                        points="12,2 22,12 12,22 2,12"
-                        fill={
-                          isCompleted
-                            ? '#E5A93C'
-                            : isCurrent
-                            ? 'rgba(229, 169, 60, 0.28)'
-                            : 'none'
-                        }
-                        stroke={
-                          isCompleted || isCurrent
-                            ? '#E5A93C'
-                            : 'rgba(245, 245, 240, 0.4)'
-                        }
-                        strokeWidth="1.5"
-                      />
-                      {(isCompleted || isCurrent) && (
-                        <circle cx="12" cy="12" r="2.5" fill="#F5F5F0" />
-                      )}
-                    </svg>
-                    <span className="constellation-node-label">{nodeLabel}</span>
-                  </div>
-                  {idx < scenario.constellationNodes.length - 1 && (
-                    <div
-                      className={`constellation-connector ${
-                        isCompleted ? 'connector-complete' : ''
-                      }`}
-                      aria-hidden="true"
+                    <polygon
+                      points="12,2 22,12 12,22 2,12"
+                      fill={
+                        isCompleted
+                          ? '#E5A93C'
+                          : isCurrent
+                          ? 'rgba(229, 169, 60, 0.28)'
+                          : 'none'
+                      }
+                      stroke={
+                        isCompleted || isCurrent
+                          ? '#E5A93C'
+                          : 'rgba(245, 245, 240, 0.4)'
+                      }
+                      strokeWidth="1.5"
                     />
-                  )}
-                </React.Fragment>
+                    {(isCompleted || isCurrent) && (
+                      <circle cx="12" cy="12" r="2.5" fill="#F5F5F0" />
+                    )}
+                  </svg>
+                  <span className="constellation-node-label">{nodeLabel}</span>
+                </div>
               );
             })}
           </div>
