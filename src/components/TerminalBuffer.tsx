@@ -21,6 +21,7 @@ interface TerminalBufferProps {
   } | null;
   ending: Ending | null;
   onKeyClick: () => void;
+  onStreamComplete: () => void;
   onRestart: () => void;
   onSelectScenario: (id: string) => void;
 }
@@ -33,6 +34,7 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
   activeOutcome,
   ending,
   onKeyClick,
+  onStreamComplete,
   onRestart,
   onSelectScenario,
 }) => {
@@ -45,13 +47,19 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
 
   // Stream the thinking & command output with procedural key clicks on each turn
   useEffect(() => {
+    // If in READY phase, show full text immediately without waiting
+    if (phase === 'READY') {
+      setStreamedChars(fullThinkingText.length);
+      return;
+    }
+
     setStreamedChars(0);
     const totalLen = fullThinkingText.length;
     let current = 0;
     let tickCounter = 0;
 
     const interval = window.setInterval(() => {
-      current += 6;
+      current += 8;
       tickCounter += 1;
       if (tickCounter % 3 === 0) {
         onKeyClick();
@@ -59,13 +67,18 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
       if (current >= totalLen) {
         setStreamedChars(totalLen);
         window.clearInterval(interval);
+        // Small graceful pause before notifying stream completion
+        const doneTimer = window.setTimeout(() => {
+          onStreamComplete();
+        }, 160);
+        return () => window.clearTimeout(doneTimer);
       } else {
         setStreamedChars(current);
       }
     }, 18);
 
     return () => window.clearInterval(interval);
-  }, [turn.turnNumber, scenario.id, fullThinkingText, onKeyClick]);
+  }, [turn.turnNumber, scenario.id, fullThinkingText, phase, onKeyClick, onStreamComplete]);
 
   // Keep terminal scrolled to active operational prompt
   useEffect(() => {
@@ -73,7 +86,7 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
       scrollContainerRef.current.scrollTop =
         scrollContainerRef.current.scrollHeight;
     }
-  }, [turn.turnNumber, activeOutcome, ending]);
+  }, [turn.turnNumber, streamedChars, activeOutcome, ending]);
 
   const visibleThinking = fullThinkingText.slice(0, streamedChars);
 

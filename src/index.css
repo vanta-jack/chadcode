@@ -777,6 +777,56 @@ body,
   color: var(--monolith-bone);
 }
 
+/* ==========================================================================
+   Waiting for Next Turn Panel (ASCII Spinner & Telemetry Sync)
+   ========================================================================== */
+.waiting-turn-panel {
+  background-color: var(--surface-panel);
+  border: 1px solid var(--border-panel);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+  min-height: 200px;
+}
+
+.waiting-spinner-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.waiting-ascii-glyph {
+  font-size: 20px;
+  color: var(--sovereign-gold);
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+.waiting-headline {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--monolith-bone);
+  letter-spacing: 0.04em;
+}
+
+.waiting-ascii-progress {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--sovereign-gold);
+  letter-spacing: 0.12em;
+}
+
+.waiting-subtext {
+  font-size: 12px;
+  color: var(--bone-muted);
+  max-width: 54ch;
+  line-height: 1.45;
+}
+
 .action-deck-grid {
   display: flex;
   flex-direction: column;

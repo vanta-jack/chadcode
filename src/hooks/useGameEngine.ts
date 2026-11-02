@@ -17,7 +17,14 @@ import {
   playTimeoutBuzzer,
 } from '../audio/sound';
 
-export type GamePhase = 'READY' | 'LOADING' | 'ACTIVE' | 'SLAM' | 'RESOLVING' | 'ENDED';
+export type GamePhase =
+  | 'READY'
+  | 'LOADING'
+  | 'ACTIVE'
+  | 'SLAM'
+  | 'RESOLVING'
+  | 'WAITING_STREAM'
+  | 'ENDED';
 
 export type SensoryEvent =
   | { type: 'NONE'; timestamp: number }
@@ -111,7 +118,7 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
     if (phase !== 'READY') return;
     playCommitSlam();
     setSensoryEvent({ type: 'COMMIT_SLAM', timestamp: Date.now() });
-    setPhase('ACTIVE');
+    setPhase('WAITING_STREAM');
   }, [phase]);
 
   const currentTurn: Turn = scenario.turns[turnIndex] ?? scenario.turns[0];
@@ -171,7 +178,7 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
         setTimeoutCount(nextTimeouts);
       }
 
-      const resolveDelayMs = outcome.severity === 'catastrophic' ? 950 : 750;
+      const resolveDelayMs = outcome.severity === 'catastrophic' ? 1200 : 900;
       const advanceTimer = window.setTimeout(() => {
         // Check if an ending is reached (Turn 10 or explicit endingId or 3 timeouts)
         if (nextTimeouts >= 3 && scenario.endings['ending-chud']) {
@@ -201,13 +208,21 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
         setTimerSec(nextTurnObj.timerSec);
         setSelectedChoiceKey(null);
         setActiveOutcome(null);
-        setPhase('ACTIVE');
+        // Enter WAITING_STREAM so next choices are hidden until stream completes
+        setPhase('WAITING_STREAM');
       }, resolveDelayMs);
 
       timersRef.current.push(advanceTimer);
     },
     [currentTurn.turnNumber, scenario, timeoutCount, turnIndex]
   );
+
+  // Called by TerminalBuffer when the situation stream finishes rendering
+  const handleStreamComplete = useCallback(() => {
+    if (phase === 'WAITING_STREAM') {
+      setPhase('ACTIVE');
+    }
+  }, [phase]);
 
   // Commit choice handler with 50ms Thumper Commit Slam
   const commitChoice = useCallback(
@@ -319,6 +334,7 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
     isPaused,
     setIsPaused,
     startGame,
+    handleStreamComplete,
     commitChoice,
     selectScenario,
     restartScenario,

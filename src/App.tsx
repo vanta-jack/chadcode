@@ -31,15 +31,15 @@ export const App: React.FC = () => {
     setStatusHudOpen((prev) => !prev);
   }, [sound]);
 
-  // When game starts from READY -> ACTIVE, switch to action view on mobile
+  // When game starts from READY -> WAITING_STREAM, show situation
   const handleStartGame = useCallback(() => {
     engine.startGame();
-    setActiveTab('action');
+    setActiveTab('situation');
   }, [engine]);
 
-  // When turn advances or choice commits, switch to situation so operator sees the outcome
+  // When turn advances or choice commits, switch to situation so operator sees the streaming logs
   useEffect(() => {
-    if (engine.phase === 'SLAM' || engine.phase === 'RESOLVING') {
+    if (engine.phase === 'SLAM' || engine.phase === 'RESOLVING' || engine.phase === 'WAITING_STREAM') {
       setActiveTab('situation');
     }
   }, [engine.phase]);
@@ -110,6 +110,7 @@ export const App: React.FC = () => {
               activeOutcome={engine.activeOutcome}
               ending={engine.ending}
               onKeyClick={sound.playKeyClick}
+              onStreamComplete={engine.handleStreamComplete}
               onRestart={engine.restartScenario}
               onSelectScenario={engine.selectScenario}
             />
@@ -139,7 +140,7 @@ export const App: React.FC = () => {
           onSelectTab={setActiveTab}
           onHoverTick={sound.playHoverTick}
           timerSec={engine.timerSec}
-          isReady={engine.phase === 'READY'}
+          isReady={engine.phase === 'READY' || engine.phase === 'WAITING_STREAM'}
           selectedChoiceKey={engine.selectedChoiceKey}
         />
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { Choice } from '../types/scenario';
 import type { GamePhase } from '../hooks/useGameEngine';
 
@@ -13,6 +13,21 @@ interface ActionDeckProps {
   onRestart: () => void;
 }
 
+const ASCII_SPINNER_FRAMES = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+const ASCII_BAR_FRAMES = [
+  '[          ]',
+  '[=         ]',
+  '[==        ]',
+  '[===       ]',
+  '[====      ]',
+  '[=====     ]',
+  '[======    ]',
+  '[=======   ]',
+  '[========  ]',
+  '[========= ]',
+  '[==========]',
+];
+
 export const ActionDeck: React.FC<ActionDeckProps> = ({
   choices,
   phase,
@@ -23,6 +38,29 @@ export const ActionDeck: React.FC<ActionDeckProps> = ({
   onHoverTick,
   onRestart,
 }) => {
+  const [spinnerIndex, setSpinnerIndex] = useState<number>(0);
+  const [barIndex, setBarIndex] = useState<number>(0);
+
+  // Animate ASCII spinner and progress bar while waiting for next turn
+  useEffect(() => {
+    if (phase !== 'WAITING_STREAM' && phase !== 'SLAM' && phase !== 'RESOLVING') {
+      return;
+    }
+
+    const spinnerTimer = window.setInterval(() => {
+      setSpinnerIndex((prev) => (prev + 1) % ASCII_SPINNER_FRAMES.length);
+    }, 80);
+
+    const barTimer = window.setInterval(() => {
+      setBarIndex((prev) => (prev + 1) % ASCII_BAR_FRAMES.length);
+    }, 120);
+
+    return () => {
+      window.clearInterval(spinnerTimer);
+      window.clearInterval(barTimer);
+    };
+  }, [phase]);
+
   // Global keyboard bindings [1-4], [A-D], [Enter/Space to Start]
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -81,6 +119,7 @@ export const ActionDeck: React.FC<ActionDeckProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [choices, disabled, onCommitChoice, onRestart, onStartGame, phase]);
 
+  // READY Staging Gate
   if (phase === 'READY') {
     return (
       <section
@@ -118,6 +157,40 @@ export const ActionDeck: React.FC<ActionDeckProps> = ({
     );
   }
 
+  // WAITING FOR NEXT TURN STATE: Choice committed / Situation stream streaming
+  if (phase === 'WAITING_STREAM' || phase === 'SLAM' || phase === 'RESOLVING') {
+    return (
+      <section
+        className="action-deck-section"
+        aria-label="Tactical deck awaiting next turn"
+      >
+        <div className="action-deck-header">
+          <span className="deck-instruction">
+            Tactical vector locked // Synchronizing environment
+          </span>
+        </div>
+
+        <div className="waiting-turn-panel" role="status" aria-live="polite">
+          <div className="waiting-spinner-row">
+            <span className="waiting-ascii-glyph" aria-hidden="true">
+              {ASCII_SPINNER_FRAMES[spinnerIndex]}
+            </span>
+            <span className="waiting-headline">Waiting for next turn...</span>
+          </div>
+
+          <div className="waiting-ascii-progress" aria-hidden="true">
+            {ASCII_BAR_FRAMES[barIndex]}
+          </div>
+
+          <p className="waiting-subtext">
+            Streaming AST &amp; audit telemetry. Action choices will unlock once the situation analysis completes.
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  // ACTIVE 4-CHOICE GRID
   return (
     <section
       className="action-deck-section"
