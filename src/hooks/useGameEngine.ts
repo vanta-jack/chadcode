@@ -176,7 +176,7 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
           },
         ]);
 
-        // Trigger consequence effects: screen shake, buzzer, vermilion flash
+        // Trigger consequence effects: screen shake, buzzer, vermilion flash (catastrophic), bone flash (clean)
         if (isTimeout) {
           playTimeoutBuzzer();
           playDamageShake(true);
@@ -187,6 +187,9 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
         } else if (outcome.severity === 'minor') {
           playDamageShake(false);
           setSensoryEvent({ type: 'MINOR_SHAKE', timestamp: Date.now() });
+        } else if (outcome.severity === 'clean') {
+          playCommitSlam();
+          setSensoryEvent({ type: 'COMMIT_SLAM', timestamp: Date.now() });
         }
 
         // Give player 2.8 seconds in CONSEQUENCE phase to absorb the impact and read outcome logs
@@ -240,31 +243,22 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
     }
   }, [phase]);
 
-  // Commit choice handler with 50ms Thumper Commit Slam
+  // Commit choice handler: enters RESOLVING (Human is thinking...) without premature flash or shake
   const commitChoice = useCallback(
     (choice: Choice) => {
       if (phase !== 'ACTIVE') return;
       clearScheduledTimers();
 
       setSelectedChoiceKey(choice.key);
-      setPhase('SLAM');
+      setPhase('RESOLVING');
 
-      // 50ms Commit Slam: camera punch + bone white flash + audio transient
-      playCommitSlam();
-      setSensoryEvent({ type: 'COMMIT_SLAM', timestamp: Date.now() });
-
-      const slamTimer = window.setTimeout(() => {
-        setPhase('RESOLVING');
-        applyOutcomeAndAdvance(
-          choice.key,
-          choice.label,
-          choice.commandPreview,
-          choice.outcome,
-          false
-        );
-      }, 55);
-
-      timersRef.current.push(slamTimer);
+      applyOutcomeAndAdvance(
+        choice.key,
+        choice.label,
+        choice.commandPreview,
+        choice.outcome,
+        false
+      );
     },
     [applyOutcomeAndAdvance, clearScheduledTimers, phase]
   );
