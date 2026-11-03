@@ -57,7 +57,7 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
 
   const fullThinkingText = turn.thinking;
   const isResolving = phase === 'SLAM' || phase === 'RESOLVING';
-  const isStreaming = phase === 'WAITING_STREAM' || (phase !== 'READY' && streamedChars < fullThinkingText.length);
+  const isStreaming = phase === 'WAITING_STREAM';
 
   // Animated spinner and animated "Loading..." / "Human is thinking..." text
   useEffect(() => {
@@ -79,9 +79,11 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
   }, [isStreaming, isResolving]);
 
   // Stream the thinking & command output with procedural key clicks on each turn
+  // Stylistic decision for immersive gameplay: when "Human is thinking" (isResolving),
+  // absolutely nothing is streamed to authentically emulate an API call in flight.
   useEffect(() => {
-    // If in READY phase, show full text immediately without waiting
-    if (phase === 'READY') {
+    // Only stream during WAITING_STREAM phase
+    if (phase !== 'WAITING_STREAM') {
       setStreamedChars(fullThinkingText.length);
       return;
     }
@@ -271,10 +273,10 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
               <div className="thinking-close-tag">&lt;/thinking&gt;</div>
             </div>
 
-            {/* Immediate Consequence Cascade during SLAM / RESOLVING with Human Thinking Jitter Indicator */}
-            {activeOutcome && (
+            {/* Pending API Call Echo & Human is thinking state during SLAM / RESOLVING */}
+            {activeOutcome && isResolving && (
               <div
-                className={`terminal-outcome-cascade outcome-${activeOutcome.outcome.severity}`}
+                className="terminal-outcome-cascade outcome-pending"
                 role="status"
                 aria-live="assertive"
               >
@@ -282,16 +284,8 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
                   chad &gt; [{activeOutcome.choiceKey}]{' '}
                   {activeOutcome.commandPreview}
                 </div>
-                <div className="outcome-summary">
-                  {activeOutcome.outcome.summary}
-                </div>
-                {activeOutcome.outcome.logOutput.map((line, idx) => (
-                  <div key={idx} className="outcome-log-line">
-                    {line}
-                  </div>
-                ))}
 
-                {/* Animated "Human is thinking..." jitter banner */}
+                {/* Animated "Human is thinking..." API in-flight banner */}
                 <div className="terminal-human-thinking-row" aria-live="polite">
                   <span className="terminal-human-glyph" aria-hidden="true">
                     {SPINNER_FRAMES[spinnerIdx]}
@@ -320,7 +314,7 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
                   █
                 </span>
               </div>
-            ) : (
+            ) : !isResolving ? (
               <div className="terminal-prompt-line">
                 <span className="prompt-sigil">chad &gt;</span>{' '}
                 <span className="prompt-dilemma">{turn.prompt}</span>
@@ -328,7 +322,7 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
                   █
                 </span>
               </div>
-            )}
+            ) : null}
           </div>
         )}
 

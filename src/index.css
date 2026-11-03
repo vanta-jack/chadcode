@@ -718,6 +718,11 @@ body,
   gap: 4px;
 }
 
+.terminal-outcome-cascade.outcome-pending {
+  border: 1px dashed var(--sovereign-gold);
+  background-color: rgba(229, 169, 60, 0.04);
+}
+
 .terminal-outcome-cascade.outcome-catastrophic {
   border-color: var(--threat-vermilion);
   background-color: var(--vermilion-tint);

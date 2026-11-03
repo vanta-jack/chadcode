@@ -131,16 +131,7 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
       outcome: Outcome,
       isTimeout: boolean = false
     ) => {
-      // Update cosmetic diegetic metrics
-      setMetrics((prev) => ({
-        stealth: clampMetric(prev.stealth + outcome.metricsDelta.stealth),
-        heat: clampMetric(prev.heat + outcome.metricsDelta.heat),
-        codeQuality: clampMetric(
-          prev.codeQuality + outcome.metricsDelta.codeQuality
-        ),
-        persona: outcome.metricsDelta.persona ?? prev.persona,
-      }));
-
+      // Stage pending action for terminal command echo and in-flight API state
       setActiveOutcome({
         choiceKey,
         choiceLabel,
@@ -148,42 +139,52 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
         outcome,
       });
 
-      setHistory((prev) => [
-        ...prev,
-        {
-          turnNumber: currentTurn.turnNumber,
-          command: commandPreview,
-          choiceKey,
-          choiceLabel,
-          logs: outcome.logOutput,
-          severity: outcome.severity,
-        },
-      ]);
-
-      // Trigger outcome shake tier
-      if (isTimeout) {
-        playTimeoutBuzzer();
-        playDamageShake(true);
-        setSensoryEvent({ type: 'CATASTROPHIC_SHAKE', timestamp: Date.now() });
-      } else if (outcome.severity === 'catastrophic') {
-        playDamageShake(true);
-        setSensoryEvent({ type: 'CATASTROPHIC_SHAKE', timestamp: Date.now() });
-      } else if (outcome.severity === 'minor') {
-        playDamageShake(false);
-        setSensoryEvent({ type: 'MINOR_SHAKE', timestamp: Date.now() });
-      }
-
       const nextTimeouts = isTimeout ? timeoutCount + 1 : timeoutCount;
       if (isTimeout) {
         setTimeoutCount(nextTimeouts);
       }
 
-      // Deliberate 4–8 seconds random jitter delay while "Human is thinking..."
+      // Deliberate 4–8 seconds random jitter delay while "Human is thinking..." (emulates API call in flight)
       const randomJitterMs = isTimeout
         ? 1500
         : Math.floor(4000 + Math.random() * 4000); // 4000ms to 8000ms
 
       const advanceTimer = window.setTimeout(() => {
+        // Apply metrics delta and commit turn logs to history once the "Human / API" returns
+        setMetrics((prev) => ({
+          stealth: clampMetric(prev.stealth + outcome.metricsDelta.stealth),
+          heat: clampMetric(prev.heat + outcome.metricsDelta.heat),
+          codeQuality: clampMetric(
+            prev.codeQuality + outcome.metricsDelta.codeQuality
+          ),
+          persona: outcome.metricsDelta.persona ?? prev.persona,
+        }));
+
+        setHistory((prev) => [
+          ...prev,
+          {
+            turnNumber: currentTurn.turnNumber,
+            command: commandPreview,
+            choiceKey,
+            choiceLabel,
+            logs: outcome.logOutput,
+            severity: outcome.severity,
+          },
+        ]);
+
+        // Trigger outcome shake / buzzer tier upon human evaluation response
+        if (isTimeout) {
+          playTimeoutBuzzer();
+          playDamageShake(true);
+          setSensoryEvent({ type: 'CATASTROPHIC_SHAKE', timestamp: Date.now() });
+        } else if (outcome.severity === 'catastrophic') {
+          playDamageShake(true);
+          setSensoryEvent({ type: 'CATASTROPHIC_SHAKE', timestamp: Date.now() });
+        } else if (outcome.severity === 'minor') {
+          playDamageShake(false);
+          setSensoryEvent({ type: 'MINOR_SHAKE', timestamp: Date.now() });
+        }
+
         // Check if an ending is reached (Turn 10 or explicit endingId or 3 timeouts)
         if (nextTimeouts >= 3 && scenario.endings['ending-chud']) {
           setEnding(scenario.endings['ending-chud']);
