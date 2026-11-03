@@ -64,42 +64,51 @@ body,
   flex-direction: column;
 }
 
-/* 50ms Commit Slam: camera punch forward */
+/* 550ms Commit Slam: camera punch forward */
 .thumper-commit-slam {
-  transform: scale(1.02);
+  transform: scale(1.045);
+  transition: transform 120ms ease-out;
 }
 
-/* 150ms Minor Setback: 3px horizontal micro-jitter */
+/* 650ms Minor Setback: 8px multi-axis micro-jitter */
 @keyframes minor-shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-3px); }
-  50% { transform: translateX(3px); }
-  75% { transform: translateX(-2px); }
-  100% { transform: translateX(0); }
-}
-
-.thumper-minor-shake {
-  animation: minor-shake 150ms linear;
-}
-
-/* 600ms Severe / Timeout Consequence: 12px violent shake */
-@keyframes violent-shake {
   0% { transform: translate(0, 0); }
-  10% { transform: translate(-12px, 4px); }
-  20% { transform: translate(11px, -6px); }
-  30% { transform: translate(-10px, -4px); }
-  40% { transform: translate(10px, 5px); }
-  50% { transform: translate(-8px, 3px); }
-  65% { transform: translate(7px, -3px); }
-  80% { transform: translate(-4px, 2px); }
+  15% { transform: translate(-8px, 3px); }
+  30% { transform: translate(8px, -4px); }
+  45% { transform: translate(-6px, 2px); }
+  60% { transform: translate(6px, -2px); }
+  75% { transform: translate(-4px, 1px); }
+  90% { transform: translate(2px, -1px); }
   100% { transform: translate(0, 0); }
 }
 
-.thumper-catastrophic-shake {
-  animation: violent-shake 600ms cubic-bezier(0.36, 0.07, 0.19, 0.97);
+.thumper-minor-shake {
+  animation: minor-shake 650ms cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
 
-/* Instantaneous Flash Overlay (fixed viewport-filling overlay) */
+/* 1100ms Severe / Timeout Consequence: 26px violent multi-axis screen shake with rotational tilt */
+@keyframes violent-shake {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  8% { transform: translate(-26px, 14px) rotate(-2.4deg); }
+  16% { transform: translate(24px, -16px) rotate(2.2deg); }
+  24% { transform: translate(-22px, -12px) rotate(-1.8deg); }
+  32% { transform: translate(20px, 14px) rotate(1.6deg); }
+  40% { transform: translate(-18px, 10px) rotate(-1.4deg); }
+  48% { transform: translate(16px, -10px) rotate(1.2deg); }
+  56% { transform: translate(-14px, 8px) rotate(-1deg); }
+  64% { transform: translate(12px, -6px) rotate(0.8deg); }
+  72% { transform: translate(-10px, 5px) rotate(-0.6deg); }
+  80% { transform: translate(8px, -4px) rotate(0.4deg); }
+  88% { transform: translate(-5px, 2px) rotate(-0.2deg); }
+  94% { transform: translate(3px, -1px) rotate(0.1deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+.thumper-catastrophic-shake {
+  animation: violent-shake 1100ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* Instantaneous Flash Overlay (fixed viewport-filling overlay with smooth fade) */
 .sensory-flash-overlay {
   position: fixed;
   top: 0;
@@ -113,12 +122,22 @@ body,
   z-index: 999;
 }
 
+@keyframes flash-fade-bone {
+  0% { background-color: rgba(245, 245, 240, 0.35); }
+  100% { background-color: rgba(245, 245, 240, 0); }
+}
+
+@keyframes flash-fade-vermilion {
+  0% { background-color: rgba(217, 56, 58, 0.48); }
+  100% { background-color: rgba(217, 56, 58, 0); }
+}
+
 .sensory-flash-bone {
-  background-color: rgba(245, 245, 240, 0.22);
+  animation: flash-fade-bone 560ms ease-out forwards;
 }
 
 .sensory-flash-vermilion {
-  background-color: rgba(217, 56, 58, 0.34);
+  animation: flash-fade-vermilion 1120ms ease-out forwards;
 }
 
 /* Low Time Pulse (timerSec <= 5) Perimeter Vignette */

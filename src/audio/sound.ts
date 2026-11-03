@@ -20,10 +20,10 @@ export const SoundFX = {
     osc.connect(oscGain);
     oscGain.connect(ctx.destination);
     osc.start(now);
-    osc.stop(now + 0.2);
+    osc.stop(now + 0.65);
 
-    // 2. 120ms filtered noise burst for physical impact transient
-    const duration = 0.12;
+    // 2. Filtered noise burst for physical impact transient (extended for dramatic weight)
+    const duration = 0.55;
     const bufferSize = Math.max(1, Math.floor(ctx.sampleRate * duration));
     const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
     const output = noiseBuffer.getChannelData(0);
@@ -72,13 +72,13 @@ export const SoundFX = {
     const gain = ctx.createGain();
     osc.type = 'sawtooth';
     osc.frequency.setValueAtTime(80, now);
-    osc.frequency.exponentialRampToValueAtTime(20, now + 0.5);
+    osc.frequency.exponentialRampToValueAtTime(20, now + 1.0);
     gain.gain.setValueAtTime(0.85, now);
-    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 1.1);
     osc.connect(gain);
     gain.connect(ctx.destination);
     osc.start(now);
-    osc.stop(now + 0.6);
+    osc.stop(now + 1.1);
   },
 };
 
@@ -220,13 +220,13 @@ class ProceduralSoundEngine {
     SoundFX.playCommitSlam(ctx);
   }
 
-  // Low rumble frequency modulation with distortion
+  // Low rumble frequency modulation with distortion (extended duration for violent impact)
   public playDamageShake(severe: boolean = false): void {
     const ctx = this.ensureContext();
     if (!ctx) return;
 
     const now = ctx.currentTime;
-    const duration = severe ? 0.55 : 0.18;
+    const duration = severe ? 1.05 : 0.68;
 
     const carrier = ctx.createOscillator();
     const modulator = ctx.createOscillator();
@@ -270,7 +270,7 @@ class ProceduralSoundEngine {
     if (!ctx) return;
 
     const now = ctx.currentTime;
-    const duration = 0.55;
+    const duration = 1.05;
 
     const oscA = ctx.createOscillator();
     const oscB = ctx.createOscillator();

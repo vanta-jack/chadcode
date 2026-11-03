@@ -192,8 +192,8 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
           setSensoryEvent({ type: 'COMMIT_SLAM', timestamp: Date.now() });
         }
 
-        // Give player 2.8 seconds in CONSEQUENCE phase to absorb the impact and read outcome logs
-        const consequenceDurationMs = 2800;
+        // Give player 3.3 seconds in CONSEQUENCE phase to absorb the impact and read outcome logs
+        const consequenceDurationMs = 3300;
 
         const advanceTimer = window.setTimeout(() => {
           // Check if an ending is reached (Turn 10 or explicit endingId or 3 timeouts)

@@ -28,7 +28,7 @@ export const SensoryStage: React.FC<SensoryStageProps> = ({
       const timer = window.setTimeout(() => {
         setMotionClass('');
         setFlashMode('none');
-      }, 65);
+      }, 565);
       return () => window.clearTimeout(timer);
     }
 
@@ -37,7 +37,7 @@ export const SensoryStage: React.FC<SensoryStageProps> = ({
       setFlashMode('none');
       const timer = window.setTimeout(() => {
         setMotionClass('');
-      }, 160);
+      }, 660);
       return () => window.clearTimeout(timer);
     }
 
@@ -47,7 +47,7 @@ export const SensoryStage: React.FC<SensoryStageProps> = ({
       const timer = window.setTimeout(() => {
         setMotionClass('');
         setFlashMode('none');
-      }, 620);
+      }, 1120);
       return () => window.clearTimeout(timer);
     }
   }, [sensoryEvent]);
