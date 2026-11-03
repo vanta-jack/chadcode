@@ -55,6 +55,11 @@ export type EndingArchetype =
   | 'BLACK_ICE'
   | 'CHUD';
 
+export interface CybersecurityLesson {
+  principle: string;
+  explanation: string;
+}
+
 export interface Ending {
   id: string;
   code: string;
@@ -65,6 +70,7 @@ export interface Ending {
   epilogue: string;
   finalPersona: string;
   isVictory: boolean;
+  cybersecurityLessons?: CybersecurityLesson[];
 }
 
 export interface Scenario {

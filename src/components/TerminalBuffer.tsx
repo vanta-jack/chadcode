@@ -236,7 +236,7 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
             {turn.humanPrompt && (
               <div className="terminal-human-prompt-card" role="region" aria-label="Human Operator Prompt">
                 <div className="human-prompt-header">
-                  <span className="human-prompt-prefix">┌── [HUMAN OPERATOR DAVE // PR #842]</span>
+                  <span className="human-prompt-prefix">┌── [INCOMING OPERATOR DISPATCH]</span>
                   <span className="human-prompt-type">DISPATCH</span>
                 </div>
                 <div className="human-prompt-body">
@@ -391,6 +391,30 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
             </div>
 
             <p className="ending-epilogue">{ending.epilogue}</p>
+
+            {/* Cybersecurity First-Principles Educational Debrief */}
+            {ending.cybersecurityLessons && ending.cybersecurityLessons.length > 0 && (
+              <div className="ending-principles-box" role="region" aria-label="Cybersecurity first-principles debrief">
+                <div className="diff-box-header">
+                  ┌── [CYBERSECURITY FIRST-PRINCIPLES DEBRIEF] ─────────────────┐
+                </div>
+                <div className="principles-list">
+                  {ending.cybersecurityLessons.map((lesson, idx) => (
+                    <div key={idx} className="principle-item">
+                      <div className="principle-title">
+                        ◈ {lesson.principle}
+                      </div>
+                      <div className="principle-explanation">
+                        {lesson.explanation}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="diff-box-footer">
+                  └─────────────────────────────────────────────────────────────┘
+                </div>
+              </div>
+            )}
 
             {/* All 5 Endings Matrix */}
             <div className="ending-constellation-matrix">

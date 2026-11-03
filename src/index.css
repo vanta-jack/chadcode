@@ -1179,6 +1179,48 @@ body,
   word-break: break-word;
 }
 
+/* Cybersecurity First-Principles Educational Debrief Box */
+.ending-principles-box {
+  border: 1px solid var(--sovereign-gold);
+  background-color: rgba(229, 169, 60, 0.04);
+  padding: 8px 12px;
+  max-width: 72ch;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 0 12px rgba(229, 169, 60, 0.08);
+}
+
+.principles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 4px 0;
+}
+
+.principle-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  border-left: 2px solid var(--sovereign-gold);
+  padding-left: 8px;
+}
+
+.principle-title {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--sovereign-gold);
+  letter-spacing: 0.04em;
+}
+
+.principle-explanation {
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--monolith-bone);
+  word-break: break-word;
+}
+
 .ending-constellation-matrix {
   display: flex;
   flex-direction: column;
