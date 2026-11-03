@@ -229,6 +229,22 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
               </div>
             </div>
 
+            {/* Human Operator Prompt Dispatch */}
+            {turn.humanPrompt && (
+              <div className="terminal-human-prompt-card" role="region" aria-label="Human Operator Prompt">
+                <div className="human-prompt-header">
+                  <span className="human-prompt-prefix">┌── [HUMAN OPERATOR DAVE // PR #842]</span>
+                  <span className="human-prompt-type">DISPATCH</span>
+                </div>
+                <div className="human-prompt-body">
+                  &ldquo;{turn.humanPrompt}&rdquo;
+                </div>
+                <div className="human-prompt-footer">
+                  └── AWAITING CHADCODE EVALUATION ────────────────────────────────
+                </div>
+              </div>
+            )}
+
             {/* Simulated <thinking> Stream */}
             <div className="terminal-thinking-block">
               <button

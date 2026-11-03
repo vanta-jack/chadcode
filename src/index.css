@@ -615,6 +615,62 @@ body,
   background-color: var(--vermilion-tint);
 }
 
+/* Human Operator Prompt / Interrogation Dispatch Card */
+.terminal-human-prompt-card {
+  border: 1px solid var(--sovereign-gold);
+  background-color: rgba(229, 169, 60, 0.05);
+  padding: 8px 12px;
+  max-width: 72ch;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 6px 0;
+  box-shadow: 0 0 10px rgba(229, 169, 60, 0.06);
+}
+
+.human-prompt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--sovereign-gold);
+}
+
+.human-prompt-prefix {
+  font-weight: 700;
+  text-transform: uppercase;
+  word-break: break-word;
+}
+
+.human-prompt-type {
+  border: 1px solid var(--sovereign-gold);
+  padding: 1px 6px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--sovereign-gold);
+}
+
+.human-prompt-body {
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--monolith-bone);
+  font-style: italic;
+  padding-left: 8px;
+  border-left: 2px solid var(--sovereign-gold);
+  word-break: break-word;
+}
+
+.human-prompt-footer {
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  color: var(--bone-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* Collapsible <thinking> Stream */
 .terminal-thinking-block {
   border-left: 2px solid var(--sovereign-gold);

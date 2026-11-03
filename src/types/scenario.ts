@@ -42,6 +42,7 @@ export interface Turn {
   terminalLogs: string[];
   gitDiff: string[];
   thinking: string;
+  humanPrompt?: string; // Explicit message/instruction/inquiry from the human operator
   prompt: string;
   choices: [Choice, Choice, Choice, Choice];
   timeoutOutcome: Outcome;
