@@ -92,7 +92,7 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
     let tickCounter = 0;
 
     const interval = window.setInterval(() => {
-      current += 6;
+      current += 3;
       tickCounter += 1;
       if (tickCounter % 3 === 0) {
         onKeyClick();
