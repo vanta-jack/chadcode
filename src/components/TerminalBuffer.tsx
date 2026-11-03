@@ -137,7 +137,7 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
     >
       {/* Box-Drawing Top Header */}
       <div className="terminal-box-border" aria-hidden="true">
-        ┌── [DIEGETIC TERMINAL WORKSTATION — CLAUDE CODE CLI] ──────────────────┐
+        ┌── [DIEGETIC TERMINAL WORKSTATION — CHADCODE CLI] ──────────────────────┐
       </div>
 
       <div className="terminal-viewport" ref={scrollContainerRef}>
