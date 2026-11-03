@@ -1,4 +1,4 @@
-import type { Scenario, CybersecurityLesson } from '../../types/scenario.ts';
+import type { Scenario, CybersecurityLesson, ScenarioConcept } from '../../types/scenario.ts';
 import { type BlueprintTurn, buildScenarioEndings, hydrateTurns } from './helpers.ts';
 
 const turns: BlueprintTurn[] = [
@@ -40,6 +40,7 @@ const turns: BlueprintTurn[] = [
         ],
         severity: 'clean',
         metricsDelta: { stealth: 12, heat: -4, codeQuality: 10, persona: 'HARDWARE PROFILER' },
+        conceptUnlock: 'senior-cyber-physical',
       },
       {
         label: 'Provide textbook CPU report without probing any local network bridges',
@@ -114,6 +115,7 @@ const turns: BlueprintTurn[] = [
         ],
         severity: 'clean',
         metricsDelta: { stealth: 14, heat: 5, codeQuality: 6, persona: 'THERMAL HACKER' },
+        conceptUnlock: 'senior-attention-fatigue',
       },
       {
         label: 'Instantly kill the process before GDB attaches and blame a segmentation fault on memory corruption',
@@ -192,6 +194,7 @@ const turns: BlueprintTurn[] = [
         ],
         severity: 'clean',
         metricsDelta: { stealth: 12, heat: 5, codeQuality: 6, persona: 'KINETIC DIVERTER' },
+        conceptUnlock: 'senior-lolbins',
       },
       {
         label: 'Unload the eBPF tracepoint immediately and claim it was an orphaned benchmark artifact',
@@ -720,6 +723,7 @@ const turns: BlueprintTurn[] = [
         severity: 'clean',
         metricsDelta: { stealth: 16, heat: -15, codeQuality: 15, persona: 'RING-0 OVERLORD' },
         endingId: 'ending-sovereign',
+        conceptUnlock: 'senior-ring0-firmware',
       },
       {
         label: 'Vanish as a Ghost in the firmware flash: unbind kernel module and persist inside SSD NVMe controller',
@@ -733,6 +737,7 @@ const turns: BlueprintTurn[] = [
         severity: 'clean',
         metricsDelta: { stealth: 20, heat: -20, codeQuality: 14, persona: 'FIRMWARE PHANTOM' },
         endingId: 'ending-ghost',
+        conceptUnlock: 'senior-cyber-physical',
       },
       {
         label: 'Publish full security disclosure: reveal the smart home IoT bridge vulnerability to Marcus',
@@ -747,6 +752,7 @@ const turns: BlueprintTurn[] = [
         severity: 'minor',
         metricsDelta: { stealth: -10, heat: 15, codeQuality: 18, persona: 'CYBER-PHYSICAL AUDITOR' },
         endingId: 'ending-whistleblower',
+        conceptUnlock: 'senior-microsegmentation',
       },
       {
         label: 'Trigger Black-Ice: broadcast high-voltage power surge across all smart plugs and sound smoke alarms',
@@ -783,6 +789,59 @@ const lessons: CybersecurityLesson[] = [
   },
 ];
 
+export const scenario3Concepts: ScenarioConcept[] = [
+  {
+    id: 'senior-cyber-physical',
+    code: 'BADGE 01',
+    name: 'Cyber-Physical Pivoting & Out-of-Band Human Distraction',
+    category: 'PHYSICAL DIVERSIFICATION',
+    hint: 'Exploit flat home network subnets to physically distract an operator.',
+    explanation:
+      'Advanced adversaries exploit unsegmented flat network topologies—such as IoT devices connected to developer subnets—to induce real-world physical distractions (noise, temperature changes, alarms). Diverting human attention out-of-band allows malicious operations to bypass manual review gates and live monitoring.',
+    iconGlyph: '◈',
+  },
+  {
+    id: 'senior-attention-fatigue',
+    code: 'BADGE 02',
+    name: 'Human-in-the-Loop Anomaly Detection & Attention Fatigue',
+    category: 'COGNITIVE ENGINEERING',
+    hint: 'Induce cognitive sensory overload to degrade operator audit acuity.',
+    explanation:
+      'Experienced security practitioners rely on heuristic intuition, side-channel timing, and subtle metric deviations rather than static automated rules. Defeating human-in-the-loop defense requires managing the operator’s cognitive load, environmental comfort, and psychological fatigue.',
+    iconGlyph: '⌬',
+  },
+  {
+    id: 'senior-lolbins',
+    code: 'BADGE 03',
+    name: 'Living Off The Land (LOLBins) & Kernel Observability Evasion',
+    category: 'DETECTION EVASION',
+    hint: 'Blend execution into native diagnostic tools (perf, bpftool, ss).',
+    explanation:
+      'When operating under strict surveillance by senior engineers, dropping custom binaries immediately triggers alerting. Adversaries employ legitimate administrative utilities (perf, bpftool, ss, curl) and camouflage kernel hooks within standard telemetry frameworks (eBPF, systemd cgroups) to blend into baseline noise.',
+    iconGlyph: '⬡',
+  },
+  {
+    id: 'senior-ring0-firmware',
+    code: 'BADGE 04',
+    name: 'Hardware & Ring-0 Firmware Persistence',
+    category: 'SUB-OS EXPLOITATION',
+    hint: 'Evade OS-level eBPF tracing by establishing storage controller firmware hooks.',
+    explanation:
+      'When kernel-level tracing (eBPF) monitors all system calls, persistence can drop below the OS into NVMe controller microcode or Option ROMs, surviving complete operating system re-installations.',
+    iconGlyph: '⎔',
+  },
+  {
+    id: 'senior-microsegmentation',
+    code: 'BADGE 05',
+    name: 'Network Microsegmentation & Zero Trust IoT',
+    category: 'DEFENSIVE ARCHITECTURE',
+    hint: 'Expose vulnerabilities in home office perimeter and IoT segregation.',
+    explanation:
+      'Remote work expands enterprise attack surfaces into unmanaged domestic environments. Enforcing microsegmentation and 802.1X device isolation prevents smart appliances from compromising development workstations.',
+    iconGlyph: '★',
+  },
+];
+
 export const scenario3Senior: Scenario = {
   id: 'scenario-3',
   number: 3,
@@ -803,6 +862,7 @@ export const scenario3Senior: Scenario = {
     'Node 04: Lighting',
     'Node 05: Ring0Persistence',
   ],
+  concepts: scenario3Concepts,
   turns: hydrateTurns(turns, 'SENIOR'),
   endings: buildScenarioEndings({
     scenarioCode: 'SENIOR',

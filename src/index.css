@@ -1765,3 +1765,377 @@ body,
     transform: none !important;
   }
 }
+
+/* ==========================================================================
+   Steam-Style Concept Badges & Achievements System
+   Strictly bounded to 4-Color Palette: Void #000, Bone #F5F5F0, Gold #E5A93C
+   ========================================================================== */
+
+/* 1. Steam Achievement Notification Toast */
+.concept-unlock-toast {
+  position: fixed;
+  top: 18px;
+  right: 20px;
+  z-index: 9999;
+  width: min(360px, calc(100vw - 32px));
+  background-color: rgba(6, 8, 13, 0.96);
+  border: 1px solid var(--sovereign-gold);
+  border-radius: 0px;
+  padding: 12px 14px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.9), 0 0 12px rgba(229, 169, 60, 0.25);
+  font-family: var(--font-mono);
+  cursor: pointer;
+  animation: steam-slide-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  backdrop-filter: blur(8px);
+}
+
+@keyframes steam-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.toast-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  border-bottom: 1px solid rgba(229, 169, 60, 0.25);
+  padding-bottom: 6px;
+}
+
+.toast-badge-icon {
+  color: var(--sovereign-gold);
+  font-size: 14px;
+  margin-right: 6px;
+}
+
+.toast-badge-title {
+  color: var(--sovereign-gold);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  flex: 1;
+}
+
+.toast-close-btn {
+  background: none;
+  border: none;
+  color: var(--bone-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.toast-close-btn:hover {
+  color: var(--monolith-bone);
+}
+
+.toast-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.toast-concept-tag {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--monolith-bone);
+  letter-spacing: 0.04em;
+}
+
+.toast-classified-msg {
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--bone-muted);
+  margin: 0;
+}
+
+.toast-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background-color: var(--sovereign-gold);
+  width: 100%;
+  animation: toast-timer-drain 4.8s linear forwards;
+}
+
+@keyframes toast-timer-drain {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+/* 2. HUD Badges Rack (Desktop Arcade HUD) */
+.hud-concept-rack {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+  padding-left: 12px;
+  border-left: 1px solid rgba(245, 245, 240, 0.15);
+}
+
+.concept-rack-label {
+  font-size: 11px;
+  color: var(--bone-muted);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.concept-rack-badges {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.concept-badge-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 11px;
+  cursor: help;
+  transition: transform 0.15s ease;
+  user-select: none;
+}
+
+.concept-badge-slot:hover {
+  transform: scale(1.2);
+}
+
+.badge-slot-unlocked {
+  color: var(--sovereign-gold);
+  text-shadow: 0 0 6px rgba(229, 169, 60, 0.6);
+}
+
+.badge-slot-archived {
+  color: rgba(229, 169, 60, 0.5);
+}
+
+.badge-slot-locked {
+  color: rgba(245, 245, 240, 0.25);
+}
+
+/* 3. Mobile Status HUD Overlay Concepts */
+.status-concepts-box {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.status-concepts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.status-concept-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(245, 245, 240, 0.1);
+  font-size: 11px;
+}
+
+.status-concept-unlocked {
+  border-color: rgba(229, 169, 60, 0.4);
+  background-color: rgba(229, 169, 60, 0.05);
+}
+
+.status-concept-glyph {
+  color: var(--sovereign-gold);
+  font-size: 12px;
+}
+
+.status-concept-code {
+  font-weight: 700;
+  color: var(--monolith-bone);
+}
+
+.status-concept-status {
+  color: var(--bone-muted);
+  font-size: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 4. Ending Debrief Concepts Showcase (TerminalBuffer) */
+.ending-concepts-showcase {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.concepts-summary-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: rgba(229, 169, 60, 0.06);
+  border: 1px solid rgba(229, 169, 60, 0.3);
+  font-size: 12px;
+}
+
+.concepts-summary-count {
+  font-weight: 700;
+  color: var(--sovereign-gold);
+  letter-spacing: 0.06em;
+}
+
+.concepts-summary-note {
+  color: var(--bone-muted);
+  font-size: 11px;
+}
+
+.concepts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.concept-card {
+  padding: 12px;
+  background-color: rgba(6, 8, 13, 0.8);
+  border: 1px solid rgba(245, 245, 240, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: border-color 0.2s ease;
+}
+
+.concept-card-unlocked-run {
+  border-color: var(--sovereign-gold);
+  background-color: rgba(229, 169, 60, 0.04);
+  box-shadow: 0 0 10px rgba(229, 169, 60, 0.1);
+}
+
+.concept-card-unlocked-any {
+  border-color: rgba(229, 169, 60, 0.4);
+}
+
+.concept-card-locked {
+  border-style: dashed;
+  opacity: 0.65;
+}
+
+.concept-card-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+}
+
+.concept-glyph {
+  color: var(--sovereign-gold);
+  font-size: 13px;
+}
+
+.concept-code {
+  font-weight: 700;
+  color: var(--monolith-bone);
+}
+
+.concept-category {
+  color: var(--bone-muted);
+  font-size: 10px;
+}
+
+.concept-status-badge {
+  margin-left: auto;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 1px 4px;
+}
+
+.concept-status-badge.status-gold {
+  color: var(--sovereign-gold);
+  border: 1px solid var(--sovereign-gold);
+}
+
+.concept-status-badge.status-bone {
+  color: var(--monolith-bone);
+  border: 1px solid rgba(245, 245, 240, 0.4);
+}
+
+.concept-status-badge.status-muted {
+  color: var(--bone-muted);
+  border: 1px dashed rgba(245, 245, 240, 0.2);
+}
+
+.concept-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--monolith-bone);
+  line-height: 1.3;
+}
+
+.concept-name-locked {
+  color: var(--bone-muted);
+  font-style: italic;
+}
+
+.concept-explanation {
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--bone-muted);
+}
+
+.concept-hint {
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--bone-muted);
+}
+
+.concept-hint-prefix {
+  color: var(--sovereign-gold);
+  font-weight: 600;
+}
+
+@media (max-width: 960px) {
+  .concept-unlock-toast {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    width: auto;
+  }
+
+  .hud-concept-rack {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: none;
+    margin-top: 6px;
+  }
+
+  .concepts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .concept-unlock-toast {
+    animation: none !important;
+  }
+  .toast-progress-bar {
+    animation: none !important;
+  }
+}

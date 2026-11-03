@@ -13,6 +13,8 @@ interface ArcadeHUDProps {
   phase: GamePhase;
   metrics: OperatorMetrics;
   isMuted: boolean;
+  unlockedConceptIds?: string[];
+  runUnlockedConceptIds?: string[];
   onToggleMute: () => void;
   onSelectScenario: (scenarioId: string) => void;
   onRestart: () => void;
@@ -31,6 +33,8 @@ export const ArcadeHUD: React.FC<ArcadeHUDProps> = ({
   phase,
   metrics,
   isMuted,
+  unlockedConceptIds = [],
+  runUnlockedConceptIds = [],
   onToggleMute,
   onSelectScenario,
   onRestart,
@@ -267,6 +271,42 @@ export const ArcadeHUD: React.FC<ArcadeHUDProps> = ({
             <span className="metric-label">Code quality:</span>
             <span className="metric-value">{metrics.codeQuality}%</span>
           </div>
+
+          {/* Steam-Style Concept Badges Rack */}
+          {scenario.concepts && scenario.concepts.length > 0 && (
+            <div className="hud-concept-rack" aria-label="Classified operational concept achievements">
+              <span className="concept-rack-label">
+                Badges: {scenario.concepts.filter(c => runUnlockedConceptIds.includes(c.id)).length}/{scenario.concepts.length}
+              </span>
+              <div className="concept-rack-badges">
+                {scenario.concepts.map((concept) => {
+                  const isUnlockedRun = runUnlockedConceptIds.includes(concept.id);
+                  const isUnlockedAny = unlockedConceptIds.includes(concept.id);
+                  return (
+                    <span
+                      key={concept.id}
+                      className={`concept-badge-slot ${
+                        isUnlockedRun
+                          ? 'badge-slot-unlocked'
+                          : isUnlockedAny
+                          ? 'badge-slot-archived'
+                          : 'badge-slot-locked'
+                      }`}
+                      title={
+                        isUnlockedRun
+                          ? `${concept.code}: [ACQUIRED] — Classified intel (Decrypted at debrief)`
+                          : isUnlockedAny
+                          ? `${concept.code}: [ARCHIVED] — Previously unlocked in dossier`
+                          : `${concept.code}: [ENCRYPTED] — ${concept.hint}`
+                      }
+                    >
+                      {isUnlockedRun ? concept.iconGlyph : isUnlockedAny ? '◈' : '◇'}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </header>

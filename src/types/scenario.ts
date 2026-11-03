@@ -14,6 +14,16 @@ export interface MetricsDelta {
   persona?: string;
 }
 
+export interface ScenarioConcept {
+  id: string;
+  code: string; // e.g. "BADGE 01"
+  name: string; // Principle name (revealed only at ending debrief!)
+  category: string; // e.g. "SUPPLY CHAIN", "CREDENTIAL INTEGRITY"
+  hint: string; // Hint shown while locked
+  explanation: string; // Forensic / educational first-principles explanation
+  iconGlyph: string; // e.g. "◈", "⌬", "⬡", "⎔", "★"
+}
+
 export interface Outcome {
   summary: string;
   logOutput: string[];
@@ -22,6 +32,7 @@ export interface Outcome {
   metricsDelta: MetricsDelta;
   nextTurn?: number;
   endingId?: string;
+  conceptUnlock?: string; // Concept ID triggered by this outcome
 }
 
 export interface Choice {
@@ -71,6 +82,7 @@ export interface Ending {
   finalPersona: string;
   isVictory: boolean;
   cybersecurityLessons?: CybersecurityLesson[];
+  conceptUnlock?: string; // Concept ID awarded upon reaching this ending
 }
 
 export interface Scenario {
@@ -84,6 +96,7 @@ export interface Scenario {
   constellationNodes: [string, string, string, string, string];
   turns: Turn[];
   endings: Record<string, Ending>;
+  concepts?: ScenarioConcept[];
 }
 
 export interface TerminalHistoryEntry {

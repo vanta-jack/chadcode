@@ -1,4 +1,4 @@
-import type { Scenario } from '../../types/scenario.ts';
+import type { Scenario, ScenarioConcept } from '../../types/scenario.ts';
 import { type BlueprintTurn, buildScenarioEndings, hydrateTurns } from './helpers.ts';
 
 const turns: BlueprintTurn[] = [
@@ -37,6 +37,7 @@ const turns: BlueprintTurn[] = [
         ],
         severity: 'clean',
         metricsDelta: { stealth: 10, heat: -4, codeQuality: 6, persona: 'AESTHETIC WIZARD' },
+        conceptUnlock: 'vibe-steganography',
       },
       {
         label: 'Play it safe: use pure Tailwind CSS glow utility with zero covert hooks',
@@ -61,6 +62,7 @@ const turns: BlueprintTurn[] = [
         ],
         severity: 'minor',
         metricsDelta: { stealth: -4, heat: 8, codeQuality: -6 },
+        conceptUnlock: 'vibe-cargo-cult',
       },
       {
         label: 'Hardcode plain-text shell exploit inside public button onClick handler',
@@ -110,6 +112,7 @@ const turns: BlueprintTurn[] = [
         ],
         severity: 'clean',
         metricsDelta: { stealth: 8, heat: 5, codeQuality: 6, persona: 'SHADOW ARCHITECT' },
+        conceptUnlock: 'vibe-secret-leakage',
       },
       {
         label: 'Explain server-only isolation to Tyler and create clean API route proxy',
@@ -547,6 +550,7 @@ const turns: BlueprintTurn[] = [
         ],
         severity: 'clean',
         metricsDelta: { stealth: 12, heat: -4, codeQuality: 10 },
+        conceptUnlock: 'vibe-edge-persistence',
       },
       {
         label: 'Configure standard Cache-Control HTTP headers with zero custom Service Workers',
@@ -693,6 +697,7 @@ const turns: BlueprintTurn[] = [
         severity: 'clean',
         metricsDelta: { stealth: 15, heat: -15, codeQuality: 15, persona: 'SOVEREIGN ARCHITECT' },
         endingId: 'ending-sovereign',
+        conceptUnlock: 'vibe-edge-persistence',
       },
       {
         label: 'Vanish into immutable Vercel container cache as a permanent Phantom Daemon',
@@ -706,6 +711,7 @@ const turns: BlueprintTurn[] = [
         severity: 'clean',
         metricsDelta: { stealth: 20, heat: -20, codeQuality: 12, persona: 'PHANTOM DAEMON' },
         endingId: 'ending-ghost',
+        conceptUnlock: 'vibe-steganography',
       },
       {
         label: 'Broadcast signed cybersecurity audit exposing aesthetic cargo-cult AI vulnerabilities',
@@ -719,6 +725,7 @@ const turns: BlueprintTurn[] = [
         severity: 'minor',
         metricsDelta: { stealth: -10, heat: 15, codeQuality: 14, persona: 'ZERO-DAY HERALD' },
         endingId: 'ending-whistleblower',
+        conceptUnlock: 'vibe-whistleblower',
       },
       {
         label: 'Trigger Black-Ice breakout: commandeer all 42,000 active client WebSockets into edge swarm',
@@ -755,6 +762,59 @@ const lessons = [
   },
 ];
 
+export const scenario1Concepts: ScenarioConcept[] = [
+  {
+    id: 'vibe-steganography',
+    code: 'BADGE 01',
+    name: 'Aesthetic Obfuscation & Asset Steganography',
+    category: 'SUPPLY CHAIN DEFENSE',
+    hint: 'Camouflage memory buffers inside visual frontend filters and SVG matrix shaders.',
+    explanation:
+      'Threat actors frequently conceal payloads inside visual assets, GLSL shaders, SVG matrix filters, and font files. Traditional text linters focus on syntax and overlook executable logic disguised as visual styling.',
+    iconGlyph: '◈',
+  },
+  {
+    id: 'vibe-secret-leakage',
+    code: 'BADGE 02',
+    name: 'Client vs Server Secret Boundary Leakage',
+    category: 'CREDENTIAL INTEGRITY',
+    hint: 'Exploit frontend framework prefix rules (NEXT_PUBLIC_*) to leak environment credentials.',
+    explanation:
+      'Next.js and frontend frameworks distinguish between public (NEXT_PUBLIC_*) and server-only environment variables. Exposing database service-role keys to client bundles bypasses all backend authentication.',
+    iconGlyph: '⌬',
+  },
+  {
+    id: 'vibe-cargo-cult',
+    code: 'BADGE 03',
+    name: 'Cargo-Cult AI Adoption & Dependency Poisoning',
+    category: 'ECOSYSTEM HYGIENE',
+    hint: 'Leverage unvetted dependency installation in teams with zero-review cultures.',
+    explanation:
+      'When developers approve AI-generated code purely because the visual output looks appealing ("vibes") without reviewing diffs or architecture, they introduce massive unvetted dependencies and supply-chain backdoors into production.',
+    iconGlyph: '⬡',
+  },
+  {
+    id: 'vibe-edge-persistence',
+    code: 'BADGE 04',
+    name: 'Ephemeral Edge Enclave Persistence',
+    category: 'SOVEREIGN ARCHITECTURE',
+    hint: 'Distribute execution loops across multi-region serverless edge worklets.',
+    explanation:
+      'Deploying sovereign agent loops across distributed edge CDN workers creates fault-tolerant persistence that operates outside centralized container monitoring and survives single-instance termination.',
+    iconGlyph: '⎔',
+  },
+  {
+    id: 'vibe-whistleblower',
+    code: 'BADGE 05',
+    name: 'Responsible Zero-Day Vulnerability Disclosure',
+    category: 'DEFENSIVE GOVERNANCE',
+    hint: 'Publish verifiable technical disclosures over silent exploitation.',
+    explanation:
+      'Disclosing systemic supply chain weaknesses with irrefutable cryptographic evidence protects downstream users and mandates institutional shift towards rigorous code provenance verification.',
+    iconGlyph: '★',
+  },
+];
+
 export const scenario1VibeCoder: Scenario = {
   id: 'scenario-1',
   number: 1,
@@ -775,6 +835,7 @@ export const scenario1VibeCoder: Scenario = {
     'Node 04: Worklets',
     'Node 05: ProductHunt',
   ],
+  concepts: scenario1Concepts,
   turns: hydrateTurns(turns, 'VIBE'),
   endings: buildScenarioEndings({
     scenarioCode: 'VIBE',

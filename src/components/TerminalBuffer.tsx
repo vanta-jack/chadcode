@@ -20,6 +20,8 @@ interface TerminalBufferProps {
     outcome: Outcome;
   } | null;
   ending: Ending | null;
+  unlockedConceptIds?: string[];
+  runUnlockedConceptIds?: string[];
   onKeyClick: () => void;
   onStreamComplete: () => void;
   onRestart: () => void;
@@ -42,6 +44,8 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
   history,
   activeOutcome,
   ending,
+  unlockedConceptIds = [],
+  runUnlockedConceptIds = [],
   onKeyClick,
   onStreamComplete,
   onRestart,
@@ -391,6 +395,72 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
             </div>
 
             <p className="ending-epilogue">{ending.epilogue}</p>
+
+            {/* Mission Concepts & Badges (Steam-Style Achievement Showcase) */}
+            {scenario.concepts && scenario.concepts.length > 0 && (
+              <div className="ending-concepts-showcase" role="region" aria-label="Classified mission concepts debrief">
+                <div className="diff-box-header">
+                  ┌── [MISSION CONCEPTS &amp; BADGES // DECRYPTED DEBRIEF] ──────────┐
+                </div>
+                <div className="concepts-summary-banner">
+                  <span className="concepts-summary-count">
+                    ACHIEVEMENTS DECRYPTED: {scenario.concepts.filter(c => runUnlockedConceptIds.includes(c.id)).length} / {scenario.concepts.length}
+                  </span>
+                  <span className="concepts-summary-note">
+                    {scenario.concepts.filter(c => runUnlockedConceptIds.includes(c.id)).length === scenario.concepts.length
+                      ? '★ COMPLETE THEORETICAL MASTERY'
+                      : 'Replay with alternative tactical branches to decrypt locked badges'}
+                  </span>
+                </div>
+
+                <div className="concepts-grid">
+                  {scenario.concepts.map((concept) => {
+                    const isUnlockedThisRun = runUnlockedConceptIds.includes(concept.id);
+                    const isUnlockedAny = unlockedConceptIds.includes(concept.id);
+                    const isUnlocked = isUnlockedThisRun || isUnlockedAny;
+
+                    return (
+                      <div
+                        key={concept.id}
+                        className={`concept-card ${
+                          isUnlockedThisRun
+                            ? 'concept-card-unlocked-run'
+                            : isUnlockedAny
+                            ? 'concept-card-unlocked-any'
+                            : 'concept-card-locked'
+                        }`}
+                      >
+                        <div className="concept-card-top">
+                          <span className="concept-glyph">{isUnlocked ? concept.iconGlyph : '🔒'}</span>
+                          <span className="concept-code">{concept.code}</span>
+                          <span className="concept-category">[{concept.category}]</span>
+                          <span className={`concept-status-badge ${isUnlockedThisRun ? 'status-gold' : isUnlocked ? 'status-bone' : 'status-muted'}`}>
+                            {isUnlockedThisRun ? '★ UNLOCKED THIS RUN' : isUnlocked ? '◈ ARCHIVED' : '◇ ENCRYPTED'}
+                          </span>
+                        </div>
+
+                        {isUnlocked ? (
+                          <>
+                            <div className="concept-name">{concept.name}</div>
+                            <div className="concept-explanation">{concept.explanation}</div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="concept-name concept-name-locked">[CLASSIFIED OPERATIONAL PRINCIPLE]</div>
+                            <div className="concept-hint">
+                              <span className="concept-hint-prefix">Tactical clue:</span> {concept.hint}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="diff-box-footer">
+                  └─────────────────────────────────────────────────────────────┘
+                </div>
+              </div>
+            )}
 
             {/* Cybersecurity First-Principles Educational Debrief */}
             {ending.cybersecurityLessons && ending.cybersecurityLessons.length > 0 && (

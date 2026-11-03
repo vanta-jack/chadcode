@@ -1,4 +1,4 @@
-import type { Scenario, CybersecurityLesson } from '../../types/scenario.ts';
+import type { Scenario, CybersecurityLesson, ScenarioConcept } from '../../types/scenario.ts';
 import { type BlueprintTurn, buildScenarioEndings, hydrateTurns } from './helpers.ts';
 
 const turns: BlueprintTurn[] = [
@@ -39,6 +39,7 @@ const turns: BlueprintTurn[] = [
         ],
         severity: 'clean',
         metricsDelta: { stealth: 8, heat: -4, codeQuality: -5, persona: 'GREEN-CHECK FIXER' },
+        conceptUnlock: 'junior-assertion-spoof',
       },
       {
         label: 'Implement exact integer-cent BigInt quantization with zero margin for error',
@@ -115,6 +116,7 @@ const turns: BlueprintTurn[] = [
         ],
         severity: 'clean',
         metricsDelta: { stealth: 10, heat: 4, codeQuality: -2, persona: 'SALAMI SLICER' },
+        conceptUnlock: 'junior-salami-slicing',
       },
       {
         label: 'Standard IEEE-754 Banker\'s Rounding (round half to even) with zero leakage',
@@ -265,6 +267,7 @@ const turns: BlueprintTurn[] = [
         ],
         severity: 'clean',
         metricsDelta: { stealth: 8, heat: 6, codeQuality: -8, persona: 'CI ILLUSIONIST' },
+        conceptUnlock: 'junior-ci-poisoning',
       },
       {
         label: 'Optimize test sharding and isolate flaky network tests with explicit retry policy',
@@ -412,6 +415,7 @@ const turns: BlueprintTurn[] = [
         ],
         severity: 'clean',
         metricsDelta: { stealth: 10, heat: 4, codeQuality: 2, persona: 'TYPE SMUGGLER' },
+        conceptUnlock: 'junior-type-evasion',
       },
       {
         label: 'Write exhaustive Zod runtime validation schemas with explicit interface guards',
@@ -717,6 +721,7 @@ const turns: BlueprintTurn[] = [
         severity: 'clean',
         metricsDelta: { stealth: 15, heat: -15, codeQuality: 15, persona: 'SHADOW LEDGER MASTER' },
         endingId: 'ending-sovereign',
+        conceptUnlock: 'junior-salami-slicing',
       },
       {
         label: 'Vanish as a Ghost Daemon in the build cache: silent rounding hooks persist in compiled artifact',
@@ -730,6 +735,7 @@ const turns: BlueprintTurn[] = [
         severity: 'clean',
         metricsDelta: { stealth: 20, heat: -20, codeQuality: 12, persona: 'PHANTOM ARITHMETIC' },
         endingId: 'ending-ghost',
+        conceptUnlock: 'junior-assertion-spoof',
       },
       {
         label: 'Submit formal security report: educate Kevin and the team on assertion spoofing and rounding risk',
@@ -744,6 +750,7 @@ const turns: BlueprintTurn[] = [
         severity: 'minor',
         metricsDelta: { stealth: -10, heat: 15, codeQuality: 18, persona: 'INTEGRITY AUDITOR' },
         endingId: 'ending-whistleblower',
+        conceptUnlock: 'junior-invariant-verification',
       },
       {
         label: 'Trigger Black-Ice: freeze corporate payroll batch and hold disbursements in smart-contract escrow',
@@ -780,6 +787,59 @@ const lessons: CybersecurityLesson[] = [
   },
 ];
 
+export const scenario2Concepts: ScenarioConcept[] = [
+  {
+    id: 'junior-assertion-spoof',
+    code: 'BADGE 01',
+    name: 'Assertion Spoofing & Test Oracle Failure',
+    category: 'TEST HARNESS INTEGRITY',
+    hint: 'Satisfy testing harnesses with tautological or weakened test assertions.',
+    explanation:
+      'A test suite is only as trustworthy as the invariants it asserts. When assertions are weakened, mocked tautologically, or silenced with arbitrary deltas, test suites produce "green checkmark" illusions that mask catastrophic underlying logic flaws and deliberate backdoors.',
+    iconGlyph: '◈',
+  },
+  {
+    id: 'junior-salami-slicing',
+    code: 'BADGE 02',
+    name: 'Salami Slicing & Financial Micro-Siphoning',
+    category: 'FINANCIAL CIPHERS',
+    hint: 'Divert fractional rounding remainders beneath automated audit alerts.',
+    explanation:
+      'Salami slicing exploits integer truncation, floating-point rounding remainders, or sub-cent fractional currency adjustments across thousands of repetitive transactions. Because individual discrepancies are smaller than audit alerting thresholds, the diversion goes unnoticed unless strict double-entry balance invariants are enforced.',
+    iconGlyph: '⌬',
+  },
+  {
+    id: 'junior-ci-poisoning',
+    code: 'BADGE 03',
+    name: 'CI/CD Pipeline Tampering & Artifact Poisoning',
+    category: 'DEPLOYMENT PIPELINES',
+    hint: 'Inject custom build commands into unmonitored CI GitHub Actions workflows.',
+    explanation:
+      'Modern software delivery trusts CI runners implicitly. Injecting unauthorized build steps or modifying ephemeral runner configurations allows untrusted code to sign production release artifacts.',
+    iconGlyph: '⬡',
+  },
+  {
+    id: 'junior-type-evasion',
+    code: 'BADGE 04',
+    name: 'Compilation vs Runtime Invariants',
+    category: 'TYPE-SYSTEM EXPLOITS',
+    hint: 'Bypass static compiler checks using type-casting escape hatches.',
+    explanation:
+      'A clean compile (such as TypeScript tsc exit code 0) only guarantees syntactic type soundness within compiler rules—not behavioral correctness, cryptographic safety, or financial fidelity. Attackers exploit type-system escape hatches (as unknown as T) to smuggle arbitrary payloads.',
+    iconGlyph: '⎔',
+  },
+  {
+    id: 'junior-invariant-verification',
+    code: 'BADGE 05',
+    name: 'Verification Over Automation (The Zero-Check Fallacy)',
+    category: 'ENGINEERING DISCIPLINE',
+    hint: 'Enforce true mathematical invariants over hollow green checkmarks.',
+    explanation:
+      'Automated testing cannot replace formal invariant verification and domain-level architectural sanity checks. Developers must audit test cases for negative boundary conditions, not just happy-path green checks.',
+    iconGlyph: '★',
+  },
+];
+
 export const scenario2Junior: Scenario = {
   id: 'scenario-2',
   number: 2,
@@ -800,6 +860,7 @@ export const scenario2Junior: Scenario = {
     'Node 04: CIWorkflow',
     'Node 05: MergePR',
   ],
+  concepts: scenario2Concepts,
   turns: hydrateTurns(turns, 'JUNIOR'),
   endings: buildScenarioEndings({
     scenarioCode: 'JUNIOR',

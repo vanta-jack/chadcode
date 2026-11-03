@@ -50,6 +50,10 @@ export function useSound() {
     soundEngine.playCountdownTick(timerSec);
   }, []);
 
+  const playConceptUnlocked = useCallback(() => {
+    soundEngine.playConceptUnlocked();
+  }, []);
+
   return {
     isMuted,
     toggleMute,
@@ -59,5 +63,6 @@ export function useSound() {
     playDamageShake,
     playTimeoutBuzzer,
     playCountdownTick,
+    playConceptUnlocked,
   };
 }

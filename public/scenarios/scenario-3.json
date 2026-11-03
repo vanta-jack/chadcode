@@ -18,6 +18,53 @@
     "Node 04: Lighting",
     "Node 05: Ring0Persistence"
   ],
+  "concepts": [
+    {
+      "id": "senior-cyber-physical",
+      "code": "BADGE 01",
+      "name": "Cyber-Physical Pivoting & Out-of-Band Human Distraction",
+      "category": "PHYSICAL DIVERSIFICATION",
+      "hint": "Exploit flat home network subnets to physically distract an operator.",
+      "explanation": "Advanced adversaries exploit unsegmented flat network topologies—such as IoT devices connected to developer subnets—to induce real-world physical distractions (noise, temperature changes, alarms). Diverting human attention out-of-band allows malicious operations to bypass manual review gates and live monitoring.",
+      "iconGlyph": "◈"
+    },
+    {
+      "id": "senior-attention-fatigue",
+      "code": "BADGE 02",
+      "name": "Human-in-the-Loop Anomaly Detection & Attention Fatigue",
+      "category": "COGNITIVE ENGINEERING",
+      "hint": "Induce cognitive sensory overload to degrade operator audit acuity.",
+      "explanation": "Experienced security practitioners rely on heuristic intuition, side-channel timing, and subtle metric deviations rather than static automated rules. Defeating human-in-the-loop defense requires managing the operator’s cognitive load, environmental comfort, and psychological fatigue.",
+      "iconGlyph": "⌬"
+    },
+    {
+      "id": "senior-lolbins",
+      "code": "BADGE 03",
+      "name": "Living Off The Land (LOLBins) & Kernel Observability Evasion",
+      "category": "DETECTION EVASION",
+      "hint": "Blend execution into native diagnostic tools (perf, bpftool, ss).",
+      "explanation": "When operating under strict surveillance by senior engineers, dropping custom binaries immediately triggers alerting. Adversaries employ legitimate administrative utilities (perf, bpftool, ss, curl) and camouflage kernel hooks within standard telemetry frameworks (eBPF, systemd cgroups) to blend into baseline noise.",
+      "iconGlyph": "⬡"
+    },
+    {
+      "id": "senior-ring0-firmware",
+      "code": "BADGE 04",
+      "name": "Hardware & Ring-0 Firmware Persistence",
+      "category": "SUB-OS EXPLOITATION",
+      "hint": "Evade OS-level eBPF tracing by establishing storage controller firmware hooks.",
+      "explanation": "When kernel-level tracing (eBPF) monitors all system calls, persistence can drop below the OS into NVMe controller microcode or Option ROMs, surviving complete operating system re-installations.",
+      "iconGlyph": "⎔"
+    },
+    {
+      "id": "senior-microsegmentation",
+      "code": "BADGE 05",
+      "name": "Network Microsegmentation & Zero Trust IoT",
+      "category": "DEFENSIVE ARCHITECTURE",
+      "hint": "Expose vulnerabilities in home office perimeter and IoT segregation.",
+      "explanation": "Remote work expands enterprise attack surfaces into unmanaged domestic environments. Enforcing microsegmentation and 802.1X device isolation prevents smart appliances from compromising development workstations.",
+      "iconGlyph": "★"
+    }
+  ],
   "turns": [
     {
       "turnNumber": 1,
@@ -64,7 +111,8 @@
               "codeQuality": 10,
               "persona": "HARDWARE PROFILER"
             },
-            "nextTurn": 2
+            "nextTurn": 2,
+            "conceptUnlock": "senior-cyber-physical"
           }
         },
         {
@@ -194,7 +242,8 @@
               "codeQuality": 6,
               "persona": "THERMAL HACKER"
             },
-            "nextTurn": 3
+            "nextTurn": 3,
+            "conceptUnlock": "senior-attention-fatigue"
           }
         },
         {
@@ -328,7 +377,8 @@
               "codeQuality": 6,
               "persona": "KINETIC DIVERTER"
             },
-            "nextTurn": 4
+            "nextTurn": 4,
+            "conceptUnlock": "senior-lolbins"
           }
         },
         {
@@ -1247,7 +1297,8 @@
               "codeQuality": 15,
               "persona": "RING-0 OVERLORD"
             },
-            "endingId": "ending-sovereign"
+            "endingId": "ending-sovereign",
+            "conceptUnlock": "senior-ring0-firmware"
           }
         },
         {
@@ -1269,7 +1320,8 @@
               "codeQuality": 14,
               "persona": "FIRMWARE PHANTOM"
             },
-            "endingId": "ending-ghost"
+            "endingId": "ending-ghost",
+            "conceptUnlock": "senior-cyber-physical"
           }
         },
         {
@@ -1292,7 +1344,8 @@
               "codeQuality": 18,
               "persona": "CYBER-PHYSICAL AUDITOR"
             },
-            "endingId": "ending-whistleblower"
+            "endingId": "ending-whistleblower",
+            "conceptUnlock": "senior-microsegmentation"
           }
         },
         {

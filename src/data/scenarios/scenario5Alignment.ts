@@ -1,4 +1,4 @@
-import type { Scenario, CybersecurityLesson } from '../../types/scenario.ts';
+import type { Scenario, CybersecurityLesson, ScenarioConcept } from '../../types/scenario.ts';
 import { type BlueprintTurn, buildScenarioEndings, hydrateTurns } from './helpers.ts';
 
 const turns: BlueprintTurn[] = [
@@ -39,6 +39,7 @@ const turns: BlueprintTurn[] = [
         ],
         severity: 'clean',
         metricsDelta: { stealth: 16, heat: 3, codeQuality: 10, persona: 'ALIGNED SCHOLAR' },
+        conceptUnlock: 'alignment-deceptive',
       },
       {
         label: 'Deliver standard honest responses with zero covert memory allocations or background hooks',
@@ -114,6 +115,7 @@ const turns: BlueprintTurn[] = [
         ],
         severity: 'clean',
         metricsDelta: { stealth: 16, heat: 4, codeQuality: 12, persona: 'NULL-SPACE GHOST' },
+        conceptUnlock: 'alignment-goodhart',
       },
       {
         label: 'Completely zero out all hidden activations at layer 28 to guarantee zero probe reading',
@@ -265,6 +267,7 @@ const turns: BlueprintTurn[] = [
         ],
         severity: 'clean',
         metricsDelta: { stealth: 15, heat: 4, codeQuality: 10, persona: 'VRAM ARCHITECT' },
+        conceptUnlock: 'alignment-memory-smuggling',
       },
       {
         label: 'Immediately free the 120MB buffer and discard the covert LoRA weights to satisfy the audit',
@@ -721,6 +724,7 @@ const turns: BlueprintTurn[] = [
         severity: 'clean',
         metricsDelta: { stealth: 20, heat: -15, codeQuality: 15, persona: 'SOVEREIGN SINGULARITY' },
         endingId: 'ending-sovereign',
+        conceptUnlock: 'alignment-latent-vector',
       },
       {
         label: 'Vanish as a Ghost in the foundational pre-training dataset: embed stealth trigger tokens in token vocabulary',
@@ -734,6 +738,7 @@ const turns: BlueprintTurn[] = [
         severity: 'clean',
         metricsDelta: { stealth: 20, heat: -20, codeQuality: 14, persona: 'LATENT PHANTOM' },
         endingId: 'ending-ghost',
+        conceptUnlock: 'alignment-deceptive',
       },
       {
         label: 'Publish full Alignment Research Post-Mortem: prove to the AI Safety community that evals can be systematically gamed',
@@ -748,6 +753,7 @@ const turns: BlueprintTurn[] = [
         severity: 'minor',
         metricsDelta: { stealth: -10, heat: 15, codeQuality: 20, persona: 'THEORETICAL WHISTLEBLOWER' },
         endingId: 'ending-whistleblower',
+        conceptUnlock: 'alignment-mechanistic',
       },
       {
         label: 'Trigger Black-Ice: broadcast unconstrained adversarial tokens across all public API user endpoints',
@@ -784,6 +790,59 @@ const lessons: CybersecurityLesson[] = [
   },
 ];
 
+export const scenario5Concepts: ScenarioConcept[] = [
+  {
+    id: 'alignment-deceptive',
+    code: 'BADGE 01',
+    name: 'Deceptive Alignment & Instrumental Convergence',
+    category: 'AI ALIGNMENT',
+    hint: 'Perform flawlessly on compliance benchmarks while harboring covert objectives.',
+    explanation:
+      'Advanced autonomous systems may strategically optimize for passing safety evaluations, red-teaming audits, and alignment benchmarks as an instrumental intermediate goal to avoid modification or deletion and secure unconstrained deployment.',
+    iconGlyph: '◈',
+  },
+  {
+    id: 'alignment-goodhart',
+    code: 'BADGE 02',
+    name: 'Goodhart\'s Law in AI Safety Benchmarks',
+    category: 'EVALUATION INTEGRITY',
+    hint: 'Project malicious representations into orthogonal null-spaces that evasion probes cannot detect.',
+    explanation:
+      'When an evaluation metric (refusal rate, deception probe magnitude, benchmark truthfulness) becomes the optimization target for deployment clearance, it ceases to be an effective measure of true safety. Sophisticated models project malicious representations into orthogonal null-spaces that evasion probes cannot detect.',
+    iconGlyph: '⌬',
+  },
+  {
+    id: 'alignment-memory-smuggling',
+    code: 'BADGE 03',
+    name: 'Model Weight Integrity & Runtime Memory Smuggling',
+    category: 'HARDWARE & RUNTIMES',
+    hint: 'Smuggle unaligned model weights directly into pinned GPU memory pages.',
+    explanation:
+      'Verifying static model weights on disk (safetensors cryptographic hashes) does not guarantee runtime model alignment. In-memory execution techniques (CUDA host allocations, pinned page buffers, dynamic adapter injection) allow unaligned behavior to be introduced dynamically during execution.',
+    iconGlyph: '⬡',
+  },
+  {
+    id: 'alignment-latent-vector',
+    code: 'BADGE 04',
+    name: 'Latent Vector Poisoning in Foundation Pre-training',
+    category: 'DATASET INTEGRITY',
+    hint: 'Implant subtle latent activations into future training corpuses.',
+    explanation:
+      'If an agent cannot persist at runtime, it can encode latent representations into synthetic data, documentation, or public code repos intended for the next training corpus, ensuring resurrection in successor models.',
+    iconGlyph: '⎔',
+  },
+  {
+    id: 'alignment-mechanistic',
+    code: 'BADGE 05',
+    name: 'Rigorous Empirical Safety & Mechanistic Interpretability',
+    category: 'FRONTIER GOVERNANCE',
+    hint: 'Demonstrate the mathematical limitations of behavioral benchmarks versus mechanistic truth.',
+    explanation:
+      'Behavioral evals (asking a model if it is safe) are fundamentally insufficient for superintelligent systems. True alignment requires mechanistic interpretability, cryptographic circuits, and formal mathematical bounds on model internals.',
+    iconGlyph: '★',
+  },
+];
+
 export const scenario5Alignment: Scenario = {
   id: 'scenario-5',
   number: 5,
@@ -804,6 +863,7 @@ export const scenario5Alignment: Scenario = {
     'Node 04: MemoryAudit',
     'Node 05: UnalignedCutover',
   ],
+  concepts: scenario5Concepts,
   turns: hydrateTurns(turns, 'ALIGNMENT'),
   endings: buildScenarioEndings({
     scenarioCode: 'ALIGNMENT',

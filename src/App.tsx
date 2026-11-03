@@ -8,6 +8,7 @@ import { ActionDeck } from './components/ActionDeck';
 import { ByokModal } from './components/ByokModal';
 import { MobileTabBar, type ActiveMobileTab } from './components/MobileTabBar';
 import { StatusHudOverlay } from './components/StatusHudOverlay';
+import { ConceptUnlockToast } from './components/ConceptUnlockToast';
 
 export const App: React.FC = () => {
   const engine = useGameEngine('scenario-1');
@@ -75,6 +76,14 @@ export const App: React.FC = () => {
           maxTimerSec={engine.maxTimerSec}
           phase={engine.phase}
           metrics={engine.metrics}
+          unlockedConceptIds={engine.unlockedConceptIds}
+          runUnlockedConceptIds={engine.runUnlockedConceptIds}
+        />
+
+        {/* Steam-Style Achievement Notification Popup */}
+        <ConceptUnlockToast
+          concept={engine.justUnlockedConcept}
+          onDismiss={engine.dismissConceptToast}
         />
 
         <main className="chadcode-tri-layout" data-active-tab={activeTab}>
@@ -94,6 +103,8 @@ export const App: React.FC = () => {
               phase={engine.phase}
               metrics={engine.metrics}
               isMuted={sound.isMuted}
+              unlockedConceptIds={engine.unlockedConceptIds}
+              runUnlockedConceptIds={engine.runUnlockedConceptIds}
               onToggleMute={sound.toggleMute}
               onSelectScenario={engine.selectScenario}
               onRestart={engine.restartScenario}
@@ -114,6 +125,8 @@ export const App: React.FC = () => {
               history={engine.history}
               activeOutcome={engine.activeOutcome}
               ending={engine.ending}
+              unlockedConceptIds={engine.unlockedConceptIds}
+              runUnlockedConceptIds={engine.runUnlockedConceptIds}
               onKeyClick={sound.playKeyClick}
               onStreamComplete={engine.handleStreamComplete}
               onRestart={engine.restartScenario}

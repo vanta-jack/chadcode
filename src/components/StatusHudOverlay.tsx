@@ -13,6 +13,8 @@ interface StatusHudOverlayProps {
   maxTimerSec: number;
   phase: GamePhase;
   metrics: OperatorMetrics;
+  unlockedConceptIds?: string[];
+  runUnlockedConceptIds?: string[];
 }
 
 export const StatusHudOverlay: React.FC<StatusHudOverlayProps> = ({
@@ -26,6 +28,8 @@ export const StatusHudOverlay: React.FC<StatusHudOverlayProps> = ({
   maxTimerSec,
   phase,
   metrics,
+  unlockedConceptIds = [],
+  runUnlockedConceptIds = [],
 }) => {
   const isCriticalTime = phase === 'ACTIVE' && timerSec <= 5;
   const formattedTime = `00:${String(Math.max(0, timerSec)).padStart(2, '0')}`;
@@ -179,6 +183,45 @@ export const StatusHudOverlay: React.FC<StatusHudOverlayProps> = ({
                 <span className="status-metric-val">{metrics.codeQuality}%</span>
               </div>
             </div>
+
+            {/* Concept Badges Rack for Mobile HUD Overlay */}
+            {scenario.concepts && scenario.concepts.length > 0 && (
+              <div className="status-concepts-box">
+                <div className="status-box-label">
+                  Classified Concepts: {scenario.concepts.filter(c => runUnlockedConceptIds.includes(c.id)).length}/{scenario.concepts.length} Unlocked
+                </div>
+                <div className="status-concepts-list">
+                  {scenario.concepts.map((concept) => {
+                    const isUnlockedRun = runUnlockedConceptIds.includes(concept.id);
+                    const isUnlockedAny = unlockedConceptIds.includes(concept.id);
+                    return (
+                      <div
+                        key={concept.id}
+                        className={`status-concept-item ${
+                          isUnlockedRun
+                            ? 'status-concept-unlocked'
+                            : isUnlockedAny
+                            ? 'status-concept-archived'
+                            : 'status-concept-locked'
+                        }`}
+                      >
+                        <span className="status-concept-glyph">
+                          {isUnlockedRun ? concept.iconGlyph : isUnlockedAny ? '◈' : '◇'}
+                        </span>
+                        <span className="status-concept-code">{concept.code}</span>
+                        <span className="status-concept-status">
+                          {isUnlockedRun
+                            ? '[ACQUIRED — DECRYPTS AT DEBRIEF]'
+                            : isUnlockedAny
+                            ? '[PREVIOUSLY DISCOVERED]'
+                            : `[ENCRYPTED] ${concept.hint}`}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

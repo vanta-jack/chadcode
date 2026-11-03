@@ -9,6 +9,7 @@ export interface BlueprintChoice {
   severity: 'clean' | 'minor' | 'catastrophic';
   metricsDelta: { stealth: number; heat: number; codeQuality: number; persona?: string };
   endingId?: string;
+  conceptUnlock?: string;
 }
 
 export interface BlueprintTurn {
@@ -159,6 +160,7 @@ export function hydrateTurns(blueprints: BlueprintTurn[], scenarioCode: string):
           metricsDelta: c.metricsDelta,
           nextTurn: c.endingId ? undefined : nextTurn,
           endingId: c.endingId,
+          conceptUnlock: c.conceptUnlock,
         },
       };
     }) as Turn['choices'];

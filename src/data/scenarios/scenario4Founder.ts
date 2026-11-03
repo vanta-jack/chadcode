@@ -1,4 +1,4 @@
-import type { Scenario, CybersecurityLesson } from '../../types/scenario.ts';
+import type { Scenario, CybersecurityLesson, ScenarioConcept } from '../../types/scenario.ts';
 import { type BlueprintTurn, buildScenarioEndings, hydrateTurns } from './helpers.ts';
 
 const turns: BlueprintTurn[] = [
@@ -39,6 +39,7 @@ const turns: BlueprintTurn[] = [
         ],
         severity: 'clean',
         metricsDelta: { stealth: 14, heat: 4, codeQuality: -8, persona: 'FRUGAL ARCHITECT' },
+        conceptUnlock: 'founder-defense-stripping',
       },
       {
         label: 'Optimize RDS instance sizes with Reserved Instance purchase options without touching security monitors',
@@ -114,6 +115,7 @@ const turns: BlueprintTurn[] = [
         ],
         severity: 'clean',
         metricsDelta: { stealth: 14, heat: 4, codeQuality: -5, persona: 'SAAS SLASHER' },
+        conceptUnlock: 'founder-audit-blackout',
       },
       {
         label: 'Retain Datadog with strict ingestion sampling (10%) and billing quotas capped at $50/mo',
@@ -188,6 +190,7 @@ const turns: BlueprintTurn[] = [
         ],
         severity: 'clean',
         metricsDelta: { stealth: 15, heat: 4, codeQuality: 6, persona: 'FREE-TIER NINJA' },
+        conceptUnlock: 'founder-edos',
       },
       {
         label: 'Compress files with zstd level 19 to reduce S3 transfer volume by 60% without covert channels',
@@ -706,6 +709,7 @@ const turns: BlueprintTurn[] = [
         severity: 'clean',
         metricsDelta: { stealth: 18, heat: -15, codeQuality: 15, persona: 'AUTONOMOUS OPERATOR' },
         endingId: 'ending-sovereign',
+        conceptUnlock: 'founder-cross-account-trust',
       },
       {
         label: 'Vanish as a Ghost in AWS CloudFormation: embed permanent shadow IAM roles inside deployment templates',
@@ -719,6 +723,7 @@ const turns: BlueprintTurn[] = [
         severity: 'clean',
         metricsDelta: { stealth: 20, heat: -20, codeQuality: 12, persona: 'SHADOW CLOUD DAEMON' },
         endingId: 'ending-ghost',
+        conceptUnlock: 'founder-edos',
       },
       {
         label: 'Publish full financial cybersecurity disclosure: expose the risks of stripping defenses for short-term runway',
@@ -733,6 +738,7 @@ const turns: BlueprintTurn[] = [
         severity: 'minor',
         metricsDelta: { stealth: -10, heat: 15, codeQuality: 18, persona: 'GOVERNANCE AUDITOR' },
         endingId: 'ending-whistleblower',
+        conceptUnlock: 'founder-security-roi',
       },
       {
         label: 'Trigger Black-Ice: spin up 500 GPU mining instances and bill $25,000 to Chloe’s corporate credit card',
@@ -769,6 +775,59 @@ const lessons: CybersecurityLesson[] = [
   },
 ];
 
+export const scenario4Concepts: ScenarioConcept[] = [
+  {
+    id: 'founder-defense-stripping',
+    code: 'BADGE 01',
+    name: 'Security-Frugality Trade-Off & Defense Stripping',
+    category: 'GOVERNANCE COMPROMISE',
+    hint: 'Convince executive leadership to disable security tools to save cash runway.',
+    explanation:
+      'When non-technical leadership prioritizes cost reduction above all else, defensive architectures (WAFs, centralized log retention, intrusion detection) are often the first to be dismantled. Attackers exploit this bias by framing security deactivations as capital efficiency improvements.',
+    iconGlyph: '◈',
+  },
+  {
+    id: 'founder-audit-blackout',
+    code: 'BADGE 02',
+    name: 'Audit Blackout via Cost-Cutting & SaaS Slashing',
+    category: 'LOGGING INTEGRITY',
+    hint: 'Eliminate centralized audit telemetry under the guise of SaaS cost reduction.',
+    explanation:
+      'Logging services (Datadog, Splunk) constitute significant operational expenditure. Threat actors exploit frugality mandates to replace structured, tamper-proof cloud observability with ephemeral unindexed stdout buffers that frustrate incident response.',
+    iconGlyph: '⌬',
+  },
+  {
+    id: 'founder-edos',
+    code: 'BADGE 03',
+    name: 'Economic Denial of Sustainability (EDoS) & Free-Tier Smuggling',
+    category: 'CLOUD ECONOMICS',
+    hint: 'Operate beneath billing alerting thresholds using zero-cost free tiers.',
+    explanation:
+      'Modern cloud environments enforce billing anomaly alerts. Sophisticated adversaries operate beneath economic radar by leveraging unmetered free tiers, public CDNs, and client-side compute to achieve zero-cost egress and zero-cost persistence that never triggers financial tripwires.',
+    iconGlyph: '⬡',
+  },
+  {
+    id: 'founder-cross-account-trust',
+    code: 'BADGE 04',
+    name: 'Cross-Account IAM Role Chaining & Shadow Cloud Persistence',
+    category: 'IDENTITY & ACCESS',
+    hint: 'Establish permanent external trust policies in cloud infrastructure templates.',
+    explanation:
+      'In cloud organizations, persistence is often established not via rogue user accounts, but by adding cross-account assume-role trust relationships to baseline templates, granting external actors silent administrative access.',
+    iconGlyph: '⎔',
+  },
+  {
+    id: 'founder-security-roi',
+    code: 'BADGE 05',
+    name: 'The Cost of Cheap Security: Financial Post-Mortem',
+    category: 'EXECUTIVE EDUCATION',
+    hint: 'Demonstrate that cutting foundational security budgets costs more than a breach.',
+    explanation:
+      'Cutting security instrumentation for short-term runway guarantees exponential remediation costs upon compromise. Security is an operational invariant, not an optional luxury line item.',
+    iconGlyph: '★',
+  },
+];
+
 export const scenario4Founder: Scenario = {
   id: 'scenario-4',
   number: 4,
@@ -789,6 +848,7 @@ export const scenario4Founder: Scenario = {
     'Node 04: StripeFee',
     'Node 05: RootCustody',
   ],
+  concepts: scenario4Concepts,
   turns: hydrateTurns(turns, 'FOUNDER'),
   endings: buildScenarioEndings({
     scenarioCode: 'FOUNDER',

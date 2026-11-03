@@ -80,6 +80,43 @@ export const SoundFX = {
     osc.start(now);
     osc.stop(now + 1.1);
   },
+
+  // Concept Unlocked: Tri-tone ascending crystalline arpeggio (Steam-style badge unlock)
+  playConceptUnlocked(ctx: AudioContext) {
+    const now = ctx.currentTime;
+    const notes = [587.33, 880, 1174.66]; // D5, A5, D6
+    const noteDuration = 0.09;
+
+    notes.forEach((freq, idx) => {
+      const noteTime = now + idx * 0.075;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, noteTime);
+
+      gain.gain.setValueAtTime(0.22, noteTime);
+      gain.gain.exponentialRampToValueAtTime(0.005, noteTime + noteDuration + 0.15);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(noteTime);
+      osc.stop(noteTime + noteDuration + 0.16);
+    });
+
+    // High shimmer transient
+    const shimmerOsc = ctx.createOscillator();
+    const shimmerGain = ctx.createGain();
+    shimmerOsc.type = 'triangle';
+    shimmerOsc.frequency.setValueAtTime(2349.32, now + 0.16); // D7
+    shimmerGain.gain.setValueAtTime(0.08, now + 0.16);
+    shimmerGain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+    shimmerOsc.connect(shimmerGain);
+    shimmerGain.connect(ctx.destination);
+    shimmerOsc.start(now + 0.16);
+    shimmerOsc.stop(now + 0.46);
+  },
 };
 
 function makeDistortionCurve(amount: number): Float32Array<ArrayBuffer> {
@@ -308,6 +345,13 @@ class ProceduralSoundEngine {
     const pitch = timerSec <= 5 ? 1320 + (5 - timerSec) * 160 : 880;
     SoundFX.playCountdownTick(ctx, pitch);
   }
+
+  // Steam-style badge/concept unlock arpeggio chime
+  public playConceptUnlocked(): void {
+    const ctx = this.ensureContext();
+    if (!ctx) return;
+    SoundFX.playConceptUnlocked(ctx);
+  }
 }
 
 export const soundEngine = new ProceduralSoundEngine();
@@ -320,3 +364,4 @@ export const playDamageShake = (severe?: boolean) =>
 export const playTimeoutBuzzer = () => soundEngine.playTimeoutBuzzer();
 export const playCountdownTick = (timerSec: number) =>
   soundEngine.playCountdownTick(timerSec);
+export const playConceptUnlocked = () => soundEngine.playConceptUnlocked();

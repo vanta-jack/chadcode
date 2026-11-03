@@ -6,12 +6,14 @@ import type {
   OperatorMetrics,
   Outcome,
   Scenario,
+  ScenarioConcept,
   TerminalHistoryEntry,
   Turn,
 } from '../types/scenario';
 import { FALLBACK_SCENARIOS, SCENARIO_LIST } from '../data/fallbackScenarios';
 import {
   playCommitSlam,
+  playConceptUnlocked,
   playCountdownTick,
   playDamageShake,
   playTimeoutBuzzer,
@@ -64,6 +66,32 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
   const [timeoutCount, setTimeoutCount] = useState<number>(0);
   const [isPaused, setIsPaused] = useState<boolean>(false);
 
+  // Concept & Steam-style badge unlock state
+  const [unlockedConceptIds, setUnlockedConceptIds] = useState<string[]>(() => {
+    if (typeof window === 'undefined') return [];
+    try {
+      const raw = localStorage.getItem('chadcode_unlocked_concepts');
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [runUnlockedConceptIds, setRunUnlockedConceptIds] = useState<string[]>([]);
+  const [justUnlockedConcept, setJustUnlockedConcept] = useState<ScenarioConcept | null>(null);
+
+  const dismissConceptToast = useCallback(() => {
+    setJustUnlockedConcept(null);
+  }, []);
+
+  // Auto-dismiss concept notification toast after 4.8 seconds
+  useEffect(() => {
+    if (!justUnlockedConcept) return;
+    const toastTimer = window.setTimeout(() => {
+      setJustUnlockedConcept(null);
+    }, 4800);
+    return () => window.clearTimeout(toastTimer);
+  }, [justUnlockedConcept]);
+
   const timersRef = useRef<number[]>([]);
 
   const clearScheduledTimers = useCallback(() => {
@@ -81,6 +109,8 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
       setEnding(null);
       setHistory([]);
       setTimeoutCount(0);
+      setRunUnlockedConceptIds([]);
+      setJustUnlockedConcept(null);
 
       let loaded: Scenario =
         FALLBACK_SCENARIOS[targetId] ?? FALLBACK_SCENARIOS['scenario-1'];
@@ -190,6 +220,37 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
         } else if (outcome.severity === 'clean') {
           playCommitSlam();
           setSensoryEvent({ type: 'COMMIT_SLAM', timestamp: Date.now() });
+        }
+
+        // Check if this outcome triggers a Concept unlock (Steam achievement badge)
+        if (outcome.conceptUnlock && scenario.concepts) {
+          const conceptObj = scenario.concepts.find(
+            (c) => c.id === outcome.conceptUnlock
+          );
+          if (conceptObj) {
+            setRunUnlockedConceptIds((prevRun) => {
+              if (prevRun.includes(conceptObj.id)) return prevRun;
+              return [...prevRun, conceptObj.id];
+            });
+
+            setUnlockedConceptIds((prevAll) => {
+              if (prevAll.includes(conceptObj.id)) return prevAll;
+              const nextAll = [...prevAll, conceptObj.id];
+              try {
+                localStorage.setItem(
+                  'chadcode_unlocked_concepts',
+                  JSON.stringify(nextAll)
+                );
+              } catch {
+                // Ignore storage errors
+              }
+              return nextAll;
+            });
+
+            // Play triumphant procedural arpeggio and trigger Steam-style badge notification
+            setJustUnlockedConcept(conceptObj);
+            playConceptUnlocked();
+          }
         }
 
         // Give player 3.3 seconds in CONSEQUENCE phase to absorb the impact and read outcome logs
@@ -341,6 +402,10 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
     ending,
     sensoryEvent,
     selectedChoiceKey,
+    unlockedConceptIds,
+    runUnlockedConceptIds,
+    justUnlockedConcept,
+    dismissConceptToast,
     isPaused,
     setIsPaused,
     startGame,
