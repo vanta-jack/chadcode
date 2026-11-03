@@ -206,6 +206,41 @@ export const ActionDeck: React.FC<ActionDeckProps> = ({
     );
   }
 
+  // CONSEQUENCE PHASE: Operator verdict delivered & effects active
+  if (phase === 'CONSEQUENCE') {
+    return (
+      <section
+        className="action-deck-section"
+        aria-label="Tactical deck resolving operator consequence"
+      >
+        <div className="action-deck-header">
+          <span className="deck-instruction">
+            Operator verdict delivered // Consequence active
+          </span>
+        </div>
+
+        <div className="waiting-turn-panel consequence-eval-panel" role="status" aria-live="polite">
+          <div className="waiting-spinner-row">
+            <span className="waiting-ascii-glyph" aria-hidden="true">
+              {ASCII_SPINNER_FRAMES[spinnerIndex]}
+            </span>
+            <span className="waiting-headline">
+              Verdict delivered // Processing impact
+            </span>
+          </div>
+
+          <div className="waiting-ascii-progress" aria-hidden="true">
+            {ASCII_BAR_FRAMES[barIndex]}
+          </div>
+
+          <p className="waiting-subtext">
+            Operator Dave evaluated your PR diff. Metrics updated and audit consequences committed to terminal history.
+          </p>
+        </div>
+      </section>
+    );
+  }
+
   // WAITING FOR NEXT TURN STATE: Situation stream streaming
   if (phase === 'WAITING_STREAM') {
     return (

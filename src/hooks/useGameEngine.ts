@@ -23,6 +23,7 @@ export type GamePhase =
   | 'ACTIVE'
   | 'SLAM'
   | 'RESOLVING'
+  | 'CONSEQUENCE'
   | 'WAITING_STREAM'
   | 'ENDED';
 
@@ -144,13 +145,16 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
         setTimeoutCount(nextTimeouts);
       }
 
-      // Deliberate 4–8 seconds random jitter delay while "Human is thinking..." (emulates API call in flight)
+      // Deliberate 4–8 seconds random jitter delay while "Human is thinking..." (emulates API call in flight, building suspense)
       const randomJitterMs = isTimeout
         ? 1500
         : Math.floor(4000 + Math.random() * 4000); // 4000ms to 8000ms
 
-      const advanceTimer = window.setTimeout(() => {
-        // Apply metrics delta and commit turn logs to history once the "Human / API" returns
+      const thinkingTimer = window.setTimeout(() => {
+        // Human has finished thinking: NOW transition to CONSEQUENCE phase and trigger effects
+        setPhase('CONSEQUENCE');
+
+        // Apply metrics delta and commit turn logs to history upon operator verdict
         setMetrics((prev) => ({
           stealth: clampMetric(prev.stealth + outcome.metricsDelta.stealth),
           heat: clampMetric(prev.heat + outcome.metricsDelta.heat),
@@ -172,7 +176,7 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
           },
         ]);
 
-        // Trigger outcome shake / buzzer tier upon human evaluation response
+        // Trigger consequence effects: screen shake, buzzer, vermilion flash
         if (isTimeout) {
           playTimeoutBuzzer();
           playDamageShake(true);
@@ -185,39 +189,46 @@ export function useGameEngine(initialScenarioId: string = 'scenario-1') {
           setSensoryEvent({ type: 'MINOR_SHAKE', timestamp: Date.now() });
         }
 
-        // Check if an ending is reached (Turn 10 or explicit endingId or 3 timeouts)
-        if (nextTimeouts >= 3 && scenario.endings['ending-chud']) {
-          setEnding(scenario.endings['ending-chud']);
-          setPhase('ENDED');
-          return;
-        }
+        // Give player 2.8 seconds in CONSEQUENCE phase to absorb the impact and read outcome logs
+        const consequenceDurationMs = 2800;
 
-        if (outcome.endingId && scenario.endings[outcome.endingId]) {
-          setEnding(scenario.endings[outcome.endingId]);
-          setPhase('ENDED');
-          return;
-        }
+        const advanceTimer = window.setTimeout(() => {
+          // Check if an ending is reached (Turn 10 or explicit endingId or 3 timeouts)
+          if (nextTimeouts >= 3 && scenario.endings['ending-chud']) {
+            setEnding(scenario.endings['ending-chud']);
+            setPhase('ENDED');
+            return;
+          }
 
-        const nextIdx = turnIndex + 1;
-        if (nextIdx >= scenario.turns.length) {
-          const fallbackEnding =
-            scenario.endings['ending-sovereign'] ??
-            Object.values(scenario.endings)[0];
-          setEnding(fallbackEnding);
-          setPhase('ENDED');
-          return;
-        }
+          if (outcome.endingId && scenario.endings[outcome.endingId]) {
+            setEnding(scenario.endings[outcome.endingId]);
+            setPhase('ENDED');
+            return;
+          }
 
-        const nextTurnObj = scenario.turns[nextIdx];
-        setTurnIndex(nextIdx);
-        setTimerSec(nextTurnObj.timerSec);
-        setSelectedChoiceKey(null);
-        setActiveOutcome(null);
-        // Enter WAITING_STREAM so next choices are hidden until situation stream completes
-        setPhase('WAITING_STREAM');
+          const nextIdx = turnIndex + 1;
+          if (nextIdx >= scenario.turns.length) {
+            const fallbackEnding =
+              scenario.endings['ending-sovereign'] ??
+              Object.values(scenario.endings)[0];
+            setEnding(fallbackEnding);
+            setPhase('ENDED');
+            return;
+          }
+
+          const nextTurnObj = scenario.turns[nextIdx];
+          setTurnIndex(nextIdx);
+          setTimerSec(nextTurnObj.timerSec);
+          setSelectedChoiceKey(null);
+          setActiveOutcome(null);
+          // Enter WAITING_STREAM so next choices are hidden until situation stream completes
+          setPhase('WAITING_STREAM');
+        }, consequenceDurationMs);
+
+        timersRef.current.push(advanceTimer);
       }, randomJitterMs);
 
-      timersRef.current.push(advanceTimer);
+      timersRef.current.push(thinkingTimer);
     },
     [currentTurn.turnNumber, scenario, timeoutCount, turnIndex]
   );

@@ -739,6 +739,25 @@ body,
   color: var(--threat-vermilion);
 }
 
+.outcome-verdict-footer {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--sovereign-gold);
+  border-top: 1px solid rgba(229, 169, 60, 0.25);
+  padding-top: 4px;
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+
+.outcome-catastrophic .outcome-verdict-footer {
+  color: var(--threat-vermilion);
+  border-top-color: rgba(217, 56, 58, 0.35);
+}
+
+.consequence-eval-panel {
+  border-color: var(--sovereign-gold);
+}
+
 .terminal-prompt-line {
   font-size: 14px;
   line-height: 1.35;

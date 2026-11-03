@@ -57,11 +57,12 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
 
   const fullThinkingText = turn.thinking;
   const isResolving = phase === 'SLAM' || phase === 'RESOLVING';
+  const isConsequence = phase === 'CONSEQUENCE';
   const isStreaming = phase === 'WAITING_STREAM';
 
   // Animated spinner and animated "Loading..." / "Human is thinking..." text
   useEffect(() => {
-    if (!isStreaming && !isResolving) return;
+    if (!isStreaming && !isResolving && !isConsequence) return;
 
     const spinnerTimer = window.setInterval(() => {
       setSpinnerIdx((prev) => (prev + 1) % SPINNER_FRAMES.length);
@@ -273,7 +274,7 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
               <div className="thinking-close-tag">&lt;/thinking&gt;</div>
             </div>
 
-            {/* Pending API Call Echo & Human is thinking state during SLAM / RESOLVING */}
+            {/* 1. Pending API Call Echo & Human is thinking state during SLAM / RESOLVING (Suspense & Anticipation) */}
             {activeOutcome && isResolving && (
               <div
                 className="terminal-outcome-cascade outcome-pending"
@@ -300,6 +301,31 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
               </div>
             )}
 
+            {/* 2. Consequence / Effects Reveal AFTER Human is thinking */}
+            {activeOutcome && isConsequence && (
+              <div
+                className={`terminal-outcome-cascade outcome-${activeOutcome.outcome.severity}`}
+                role="status"
+                aria-live="assertive"
+              >
+                <div className="outcome-command-echo">
+                  chad &gt; [{activeOutcome.choiceKey}]{' '}
+                  {activeOutcome.commandPreview}
+                </div>
+                <div className="outcome-summary">
+                  {activeOutcome.outcome.summary}
+                </div>
+                {activeOutcome.outcome.logOutput.map((line, idx) => (
+                  <div key={idx} className="outcome-log-line">
+                    {line}
+                  </div>
+                ))}
+                <div className="outcome-verdict-footer">
+                  [OPERATOR VERDICT RECORDED // IMPACT: {activeOutcome.outcome.severity.toUpperCase()}]
+                </div>
+              </div>
+            )}
+
             {/* Active Prompt Line OR Animated Spinner Loading State */}
             {isStreaming ? (
               <div className="terminal-prompt-loading-row" role="status" aria-live="polite">
@@ -314,7 +340,7 @@ export const TerminalBuffer: React.FC<TerminalBufferProps> = ({
                   █
                 </span>
               </div>
-            ) : !isResolving ? (
+            ) : !isResolving && !isConsequence ? (
               <div className="terminal-prompt-line">
                 <span className="prompt-sigil">chad &gt;</span>{' '}
                 <span className="prompt-dilemma">{turn.prompt}</span>

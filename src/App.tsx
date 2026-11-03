@@ -39,7 +39,12 @@ export const App: React.FC = () => {
 
   // When turn advances or choice commits, switch to situation so operator sees the streaming logs
   useEffect(() => {
-    if (engine.phase === 'SLAM' || engine.phase === 'RESOLVING' || engine.phase === 'WAITING_STREAM') {
+    if (
+      engine.phase === 'SLAM' ||
+      engine.phase === 'RESOLVING' ||
+      engine.phase === 'CONSEQUENCE' ||
+      engine.phase === 'WAITING_STREAM'
+    ) {
       setActiveTab('situation');
     }
   }, [engine.phase]);
